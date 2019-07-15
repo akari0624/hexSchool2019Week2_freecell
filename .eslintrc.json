@@ -1,0 +1,41 @@
+{
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "plugin:@typescript-eslint/recommended", 
+      "plugin:react/recommended",
+      "plugin:prettier/recommended",
+      "prettier/@typescript-eslint"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 8,
+      "ecmaFeatures": {
+        "experimentalObjectRestSpread": true,
+        "jsx": true
+      },
+      "sourceType": "module"
+    },
+    "plugins": ["react", "react-hooks", "@typescript-eslint"],
+    "rules": {
+      "indent": ["error", 2],
+      "linebreak-style": ["error", "unix"],
+      "quotes": ["error", "single"],
+      "semi": ["off", "never"],
+      "no-console": "off",
+      "react/display-name": ["off"],
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/explicit-function-return-type": "off"
+    },
+    "globals": {
+      "describe": false,
+      "beforeEach": false,
+      "global": false,
+      "process": false,
+      "test": false,
+      "expect": false
+    }
+  }
