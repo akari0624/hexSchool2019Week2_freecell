@@ -1,12 +1,17 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import {
-  DragDropContext,
   Droppable,
   Draggable,
   DroppableProvided,
   DroppableStateSnapshot
 } from 'react-beautiful-dnd'
 import Styled from 'styled-components'
+
+const DropableRefWrapper = Styled.div`
+  width: 100px;
+  height: 90px;
+  margin-top: -60px;
+`
 
 const DraggableWrapper = Styled.div`
   width: 100px;
@@ -33,31 +38,55 @@ const NotDraggablePorkerCard = Styled.div`
   margin-top: -60px;
 `
 
-export default function CardDeck() {
-  const pokerCards = [1, 2, 3, 4, 5, 6, 7, 8]
+interface Props {
+  pokerCards: number[]
+  droppableId: string
+  nowDraggingAreaId: string
+}
 
+
+  export default function CardDeck(props: Props) {
+    const { pokerCards, droppableId, nowDraggingAreaId } = props
   const renderCards = useCallback(
-    (pokerCards: number[]) => (
+    (pokerCards: number[], nowDraggingDroppableAreaId, thisDroppableId) => (
       provided: DroppableProvided,
       snapshot: DroppableStateSnapshot
     ) => (
-      <>
+      <DropableRefWrapper ref={provided.innerRef} {...provided.droppableProps}>
         {pokerCards.map((cardNumber, idx) => {
           const cLength = pokerCards.length
+          // if (
+          //   nowDraggingAreaId !== '' &&
+          //   nowDraggingDroppableAreaId !== thisDroppableId
+          // ) {
+          //   return (
+          //     <NotDraggablePorkerCard
+          //       key={`${cardNumber}_${idx}`}
+          //     >{`${cardNumber}`}</NotDraggablePorkerCard>
+          //   )
+          // }
+
           if (idx !== cLength - 1) {
             return (
-              <NotDraggablePorkerCard>{`${cardNumber}`}</NotDraggablePorkerCard>
+              <NotDraggablePorkerCard
+                key={`${cardNumber}_${idx}`}
+              >{`${cardNumber}`}</NotDraggablePorkerCard>
             )
           }
 
           return (
             <DraggableWrapper
-              ref={provided.innerRef}
-              key={`${cardNumber}.${idx}`}
-            >
-              <Draggable draggableId={`${idx}`} index={idx}>
+            ref={provided.innerRef}
+            key={`${cardNumber}.${idx}`}
+          >
+              <Draggable
+                draggableId={`${cardNumber}`}
+                index={idx}
+                key={`${cardNumber}_${idx}`}
+              >
                 {(provided, snapshot) => (
                   <PorkerCard
+                    key={`${cardNumber}_${idx}`}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
@@ -67,26 +96,20 @@ export default function CardDeck() {
                   </PorkerCard>
                 )}
               </Draggable>
+             
             </DraggableWrapper>
+
           )
         })}
-      </>
+        {provided.placeholder}
+      </DropableRefWrapper>
     ),
     []
   )
-
-  const onDragAndDropEnd = useCallback(
-    () => console.log('do nothing now ....'),
-    []
-  )
-
+ 
   return (
-    <>
-      <DragDropContext onDragEnd={onDragAndDropEnd}>
-        <Droppable droppableId="todoListDropable">
-          {renderCards(pokerCards)}
-        </Droppable>
-      </DragDropContext>
-    </>
+    <Droppable droppableId={droppableId} direction="horizontal">
+      {renderCards(pokerCards, nowDraggingAreaId, droppableId)}
+    </Droppable>
   )
 }

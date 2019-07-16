@@ -19,7 +19,7 @@ module.exports = {
   entry: WEBPACK_Config_Base.ENTRY_POINT,
   output: {
     path: path.join(__dirname, '../', 'dist'),
-    publicPath: '/', // your webApp name(if has) on server put here.   eg:/MyWebApp
+    publicPath: '/hexSchool2019Week2_freecell',
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].js'
   },
@@ -48,7 +48,7 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[path][name].[ext]',
-              publicPath: '/' // your webApp name(if has) on server put here.   eg:/MyWebApp
+              publicPath: '/hexSchool2019Week2_freecell/'
             }
           }
         ]

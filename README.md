@@ -1,4 +1,4 @@
-# Pomodoro
+# Freecell
 
 ## 六角學院 2019 theF2EChallenge Week2 新接龍
 - [資訊](https://www.facebook.com/groups/173311386703334/permalink/364591804241957/)

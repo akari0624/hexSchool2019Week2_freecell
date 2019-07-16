@@ -11,11 +11,12 @@
     "fastbuild_devWithBabel": "NODE_ENV=withBabel webpack-dev-server --public-host --config ./webpack_config/webpack.config.dev.fastbuild.js --mode development ",
     "dist": "npm run clean && webpack --config ./webpack_config/webpack.config.prod.js --progress --bail --env dist -p",
     "distWithBabel": "NODE_ENV=withBabel npm run clean && webpack --config ./webpack_config/webpack.config.prod.js --progress --bail --env dist -p",
-    "deploy": "npm run dist && gh-pages -d dist",
+    "deploy": "npm run dist && npm run cp_favi && gh-pages -d dist",
     "deployWithBabel": "npm run distWithBabel && gh-pages -d dist",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./test/test_helper.js --recursive ./test",
     "test_ts": "mocha --require ts-node/register './test/**/*.{ts, tsx}'",
     "test:watch": "npm run test -- --watch",
+    "cp_favi": "cp ./favicon.ico ./dist",
     "clean": "rimraf dist/*"
   },
   "author": "",
