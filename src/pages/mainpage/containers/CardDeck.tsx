@@ -44,7 +44,7 @@ export default function CardDeck() {
       <>
         {pokerCards.map((cardNumber, idx) => {
           const cLength = pokerCards.length
-          if (idx !== 0 && idx !== cLength - 1) {
+          if (idx !== cLength - 1) {
             return (
               <NotDraggablePorkerCard>{`${cardNumber}`}</NotDraggablePorkerCard>
             )
