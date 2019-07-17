@@ -32,9 +32,12 @@ const NotDraggablePorkerCard = Styled.div`
   text-align: center;
   margin-top: -60px;
 `
+interface Props {
+  pokerCards: number[]
+  droppableId: string
+}
 
-export default function CardDeck() {
-  const pokerCards = [1, 2, 3, 4, 5, 6, 7, 8]
+export default function CardDeck(props: Props) {
 
   const renderCards = useCallback(
     (pokerCards: number[]) => (
@@ -55,7 +58,7 @@ export default function CardDeck() {
               ref={provided.innerRef}
               key={`${cardNumber}.${idx}`}
             >
-              <Draggable draggableId={`${idx}`} index={idx}>
+              <Draggable draggableId={`${cardNumber}_${idx}`} index={idx}>
                 {(provided, snapshot) => (
                   <PorkerCard
                     ref={provided.innerRef}
@@ -63,30 +66,21 @@ export default function CardDeck() {
                     {...provided.dragHandleProps}
                   >
                     {`${cardNumber}`}
-                    {provided.placeholder}
                   </PorkerCard>
                 )}
               </Draggable>
             </DraggableWrapper>
           )
         })}
+        {provided.placeholder}
       </>
     ),
     []
   )
-
-  const onDragAndDropEnd = useCallback(
-    () => console.log('do nothing now ....'),
-    []
-  )
-
+  const { pokerCards, droppableId } = props
   return (
-    <>
-      <DragDropContext onDragEnd={onDragAndDropEnd}>
-        <Droppable droppableId="todoListDropable">
-          {renderCards(pokerCards)}
-        </Droppable>
-      </DragDropContext>
-    </>
+    <Droppable droppableId={droppableId} direction="horizontal">
+      {renderCards(pokerCards)}
+    </Droppable>
   )
 }
