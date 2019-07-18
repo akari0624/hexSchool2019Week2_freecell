@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, ReactNode } from 'react'
 import styled from 'styled-components'
 import { DNDCtxProps } from './DropAndDragContext'
 
@@ -10,7 +10,7 @@ const DropWrapper = styled.div`
 
 interface DroppableProps {
   droppableId: string
-  children: JSX.Element
+  children: JSX.Element | ReactNode
 }
 
 type DroppablePropsMerged = DNDCtxProps & DroppableProps
