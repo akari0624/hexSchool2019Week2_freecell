@@ -1,20 +1,25 @@
 import React, { useCallback } from 'react'
 
-
-// callback
-const onDropDone = (nowDroppedId: string, dragIemId: string) => {
-
-  console.log(nowDroppedId, dragIemId)
+interface Props {
+  children: (propObj: DNDCtxProps) => JSX.Element
+  onDropDone: (nowDroppedId: string, dragItemId: string) => void
 }
 
-interface Props {
-  children: (cb: Function) => JSX.Element
+export interface DNDCtxProps {
+  onDropDoneCB: (nowDroppedId: string, dragItemId: string) => void
 }
 
 export default function DropAndDragContext(props: Props) {
-  return (
-    <div>
-      {props.children(onDropDone)}
-    </div>
+  const { onDropDone } = props
+  // callback
+  const onDropDoneCB = useCallback(
+    (nowDroppedId: string, dragItemId: string) => {
+      onDropDone(nowDroppedId, dragItemId)
+    },
+    [onDropDone]
   )
+
+  const dndCtxPropObj: DNDCtxProps = {onDropDoneCB}
+
+  return <div>{props.children(dndCtxPropObj)}</div>
 }

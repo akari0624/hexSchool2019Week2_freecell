@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
-
+import { DNDCtxProps } from './DropAndDragContext'
 
 const DropWrapper = styled.div`
   width: 300px;
@@ -11,31 +11,30 @@ const DropWrapper = styled.div`
 interface DroppableProps {
   droppableId: string
   children: JSX.Element
-  onDnDDone: Function
 }
 
-const Droppable: React.FC<DroppableProps> = props => {
-  const { droppableId, onDnDDone } = props
+type DroppablePropsMerged = DNDCtxProps & DroppableProps
+
+const Droppable: React.FC<DroppablePropsMerged> = props => {
+  const { droppableId, onDropDoneCB } = props
 
   const dropHandler = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
-      console.log('droppableId', droppableId)
       const draggedId = e.dataTransfer.getData('dragItemId')
-      console.log('onDrop: try to get draggedId', draggedId)
-      onDnDDone(droppableId, draggedId)
+      onDropDoneCB(droppableId, draggedId)
     },
     [droppableId]
   )
 
-  const dragOverHandler = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-     
-      e.preventDefault()
-    },
-    []
-  )
+  const dragOverHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }, [])
 
-  return <DropWrapper onDrop={dropHandler} onDragOver={dragOverHandler}>{props.children}</DropWrapper>
+  return (
+    <DropWrapper onDrop={dropHandler} onDragOver={dragOverHandler}>
+      {props.children}
+    </DropWrapper>
+  )
 }
 
 export { Droppable as default }
