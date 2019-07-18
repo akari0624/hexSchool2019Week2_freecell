@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import reducers from './reducers'
 import { StyledComponentGlobalStyle } from './themes/globalStyle'
 import indexRouter from './pages/mainpage'
+import indexRouter2 from './pages/mainpage/index2'
 
 const createStoreWithMiddleware = applyMiddleware()(createStore)
 
@@ -29,6 +30,7 @@ ReactDOM.render(
       <BrowserRouter>
         <div>
           <Switch>
+            <Route path="/page2" component={indexRouter2} />
             <Route path="/" component={indexRouter} />
           </Switch>
         </div>
