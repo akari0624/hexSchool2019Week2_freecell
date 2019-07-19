@@ -46,7 +46,7 @@ const renderDecks = (
   return elementsArr
 }
 
-export default function Index2() {
+export default function IndexPage() {
   const [cardDecks, setCardDecks] = useState<Map<string, Card[]>>(cardData)
 
   const onDropDone = useCallback(
