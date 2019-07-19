@@ -1,17 +1,15 @@
 import React, { useCallback, ReactNode } from 'react'
-import styled from 'styled-components'
 import { DNDCtxProps } from './DropAndDragContext'
-import {DnDModuleConstants} from './constant'
+import { DnDModuleConstants } from './constant'
 
-const DropWrapper = styled.div`
-  width: 300px;
-  height: 500px;
-  border: 1px solid black;
-`
+type DroppablePropsToChidrenWrapperType = {
+  onDrop: (evt: React.DragEvent<HTMLElement>) => void
+  onDragOver: (e: React.DragEvent<HTMLElement>) => void
+}
 
 interface DroppableProps {
   droppableId: string
-  children: JSX.Element | ReactNode
+  children: (propsForChildren: DroppablePropsToChidrenWrapperType) => JSX.Element | ReactNode
 }
 
 type DroppablePropsMerged = DNDCtxProps & DroppableProps
@@ -20,29 +18,36 @@ const Droppable: React.FC<DroppablePropsMerged> = props => {
   const { droppableId, onDropDoneCB } = props
 
   const dropHandler = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
+    (e: React.DragEvent<HTMLElement>) => {
       const draggedId = e.dataTransfer.getData(DnDModuleConstants.dragItemId)
-      const fromWhichDroppable = e.dataTransfer.getData(DnDModuleConstants.belongDroppableId)
-      const dragItemIndex = e.dataTransfer.getData(DnDModuleConstants.draggedItemIndex)
-      onDropDoneCB({ from: {
-        fromDroppableId: fromWhichDroppable,
-        dragItemId: draggedId,
-        dragItemIndex: parseInt(dragItemIndex, 10)
-
-      }, to: droppableId })
+      const fromWhichDroppable = e.dataTransfer.getData(
+        DnDModuleConstants.belongDroppableId
+      )
+      const dragItemIndex = e.dataTransfer.getData(
+        DnDModuleConstants.draggedItemIndex
+      )
+      onDropDoneCB({
+        from: {
+          fromDroppableId: fromWhichDroppable,
+          dragItemId: draggedId,
+          dragItemIndex: parseInt(dragItemIndex, 10)
+        },
+        to: droppableId
+      })
     },
     [droppableId]
   )
 
-  const dragOverHandler = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+  const dragOverHandler = useCallback((e: React.DragEvent<HTMLElement>) => {
     e.preventDefault()
   }, [])
 
-  return (
-    <DropWrapper onDrop={dropHandler} onDragOver={dragOverHandler}>
-      {props.children}
-    </DropWrapper>
-  )
+  const DroppablePropsToChidrenWrapper = {
+    onDrop: dropHandler,
+    onDragOver: dragOverHandler
+  }
+
+  return <>{props.children(DroppablePropsToChidrenWrapper)}</>
 }
 
 export { Droppable as default }
