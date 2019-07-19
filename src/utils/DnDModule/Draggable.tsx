@@ -14,9 +14,9 @@ export default function Draggable(props: Props) {
     (e: React.DragEvent<HTMLElement>) => {
       e.dataTransfer.setData(DnDModuleConstants.dragItemId, draggableItemId)
       e.dataTransfer.setData(DnDModuleConstants.belongDroppableId, belongDroppableId)
-      e.dataTransfer.setData(DnDModuleConstants.draggedItemIndex, ''+index)
+      e.dataTransfer.setData(DnDModuleConstants.draggedItemIndex, String(index))
     },
-    [draggableItemId]
+    [draggableItemId, belongDroppableId, index, isDraggable]
   )
   return (
     <div draggable={isDraggable} onDragStart={onDragStartHandler}>
