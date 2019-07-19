@@ -9,7 +9,7 @@ type DroppablePropsToChidrenWrapperType = {
 
 interface DroppableProps {
   droppableId: string
-  children: (propsForChildren: DroppablePropsToChidrenWrapperType) => JSX.Element | ReactNode
+  children: (propsForChildren: DroppablePropsToChidrenWrapperType) => JSX.Element | ReactNode | React.FunctionComponentElement<any>[]
 }
 
 type DroppablePropsMerged = DNDCtxProps & DroppableProps
@@ -32,10 +32,10 @@ const Droppable: React.FC<DroppablePropsMerged> = props => {
           dragItemId: draggedId,
           dragItemIndex: parseInt(dragItemIndex, 10)
         },
-        to: droppableId
+        to: droppableId,
       })
     },
-    [droppableId]
+    [droppableId, onDropDoneCB]
   )
 
   const dragOverHandler = useCallback((e: React.DragEvent<HTMLElement>) => {
@@ -44,7 +44,7 @@ const Droppable: React.FC<DroppablePropsMerged> = props => {
 
   const DroppablePropsToChidrenWrapper = {
     onDrop: dropHandler,
-    onDragOver: dragOverHandler
+    onDragOver: dragOverHandler,
   }
 
   return <>{props.children(DroppablePropsToChidrenWrapper)}</>

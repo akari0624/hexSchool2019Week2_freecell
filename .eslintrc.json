@@ -29,7 +29,14 @@
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
       "@typescript-eslint/explicit-function-return-type": "off",
-      "react/prop-types" : [0]
+      "react/prop-types" : [0],
+      "comma-dangle": ["warn", {
+        "arrays": "always",
+        "objects": "always",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never"
+    }]
     },
     "globals": {
       "describe": false,
