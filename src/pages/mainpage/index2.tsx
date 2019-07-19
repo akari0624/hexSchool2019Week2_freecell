@@ -3,13 +3,12 @@ import _cloneDeep from 'lodash.clonedeep'
 import { DragAndDropContext, Droppable, Draggable } from '../../utils/DnDModule'
 import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
-import { CardDeckArea } from './Styled'
+import { CardDeckArea, PorkerCard, DecksWrapper } from './Styled'
 
 type Card = {
   value: number
   dragId: string
 }
-
 
 const cardData = new Map<string, Card[]>()
 cardData.set('dropable1', [
@@ -17,8 +16,6 @@ cardData.set('dropable1', [
   { value: 222, dragId: 'card2' }
 ])
 cardData.set('dropable2', [{ value: 333, dragId: 'card3' }])
-
-
 
 const renderDecks = (
   cardDecks: Map<string, Card[]>,
@@ -37,7 +34,7 @@ const renderDecks = (
                 belongDroppableId={deckKey}
                 index={idx}
               >
-                <div>{card.value}</div>
+                <PorkerCard>{card.value}</PorkerCard>
               </Draggable>
             ))}
           </CardDeckArea>
@@ -47,7 +44,6 @@ const renderDecks = (
   }
   return elementsArr
 }
-
 
 export default function Index2() {
   const [cardDecks, setCardDecks] = useState<Map<string, Card[]>>(cardData)
@@ -71,7 +67,9 @@ export default function Index2() {
 
   return (
     <DragAndDropContext onDropDone={onDropDone}>
-      {dndCtxProp => <>{renderDecks(cardDecks, dndCtxProp)}</>}
+      {dndCtxProp => (
+        <DecksWrapper>{renderDecks(cardDecks, dndCtxProp)}</DecksWrapper>
+      )}
     </DragAndDropContext>
   )
 }
