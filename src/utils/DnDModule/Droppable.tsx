@@ -23,7 +23,13 @@ const Droppable: React.FC<DroppablePropsMerged> = props => {
     (e: React.DragEvent<HTMLDivElement>) => {
       const draggedId = e.dataTransfer.getData(DnDModuleConstants.dragItemId)
       const fromWhichDroppable = e.dataTransfer.getData(DnDModuleConstants.belongDroppableId)
-      onDropDoneCB({from: fromWhichDroppable, to: droppableId, dragItemId: draggedId})
+      const dragItemIndex = e.dataTransfer.getData(DnDModuleConstants.draggedItemIndex)
+      onDropDoneCB({ from: {
+        fromDroppableId: fromWhichDroppable,
+        dragItemId: draggedId,
+        dragItemIndex: parseInt(dragItemIndex, 10)
+
+      }, to: droppableId })
     },
     [droppableId]
   )

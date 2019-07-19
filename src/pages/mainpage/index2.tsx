@@ -1,11 +1,8 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, ReactNode } from 'react'
 import _cloneDeep from 'lodash.clonedeep'
-import {
-  DragAndDropContext,
-  Droppable,
-  Draggable
-} from '../../utils/DnDModule'
+import { DragAndDropContext, Droppable, Draggable } from '../../utils/DnDModule'
 import { DnDTransData } from '../../utils/DnDModule/models'
+import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
 
 type Card = {
   value: number
@@ -17,40 +14,60 @@ type CardDeck = {
   cards: Card[]
 }
 
+const cardData = new Map<string, Card[]>()
+cardData.set('dropable1', [
+  { value: 111, dragId: 'card1' },
+  { value: 222, dragId: 'card2' }
+])
+cardData.set('dropable2', [{ value: 333, dragId: 'card3' }])
+
+const renderDecks = (
+  cardDecks: Map<string, Card[]>,
+  dndCtxProp: DNDCtxProps
+): ReactNode[] => {
+  let elementsArr: ReactNode[] = []
+  for (let [deckKey, cards] of cardDecks.entries()) {
+    elementsArr.push(
+      <Droppable key={deckKey} droppableId={deckKey} {...dndCtxProp}>
+        {cards.map((card, idx) => (
+          <Draggable
+            key={card.dragId}
+            draggableItemId={card.dragId}
+            belongDroppableId={deckKey}
+            index={idx}
+          >
+            <div>{card.value}</div>
+          </Draggable>
+        ))}
+      </Droppable>
+    )
+  }
+  return elementsArr
+}
+
 export default function Index2() {
-  const [cardDecks, setCardDecks] = useState<CardDeck[]>([
-    {
-      dropId: 'dropable1',
-      cards: [{ value: 111, dragId: 'card1' }, { value: 222, dragId: 'card2' }]
+  const [cardDecks, setCardDecks] = useState<Map<string, Card[]>>(cardData)
+
+  const onDropDone = useCallback(
+    (data: DnDTransData) => {
+      const { from, to } = data
+
+      setCardDecks(prevDeck => {
+        console.log('topLevel, from:to =', from, to)
+        const newDecks = _cloneDeep(prevDeck)
+        const moveData = prevDeck.get(from.fromDroppableId)[from.dragItemIndex]
+        newDecks.get(to).push(moveData)
+        newDecks.get(from.fromDroppableId).splice(from.dragItemIndex, 1)
+
+        return newDecks
+      })
     },
-    { dropId: 'dropable2', cards: [{ value: 333, dragId: 'card3' }] }
-  ])
-  const onDropDone = useCallback((data: DnDTransData) => {
-    console.log('atLevel, from:to:dragged =', data.from, data.to, data.dragItemId)
-    const newDecks = _cloneDeep(cardDecks)
-    newDecks[0][`cards`].push({ value: 333, dragId: 'card3' })
-    setCardDecks(newDecks)
-  }, [])
+    [cardDecks]
+  )
 
   return (
     <DragAndDropContext onDropDone={onDropDone}>
-      {dndCtxProp => (
-        <>
-          {cardDecks.map(deck => (
-            <Droppable
-              key={deck.dropId}
-              droppableId={deck.dropId}
-              {...dndCtxProp}
-            >
-              {deck.cards.map(card => (
-                <Draggable key={card.dragId} draggableItemId={card.dragId} belongDroppableId={deck.dropId}>
-                  <div>{card.value}</div>
-                </Draggable>
-              ))}
-            </Droppable>
-          ))}
-        </>
-      )}
+      {dndCtxProp => <>{renderDecks(cardDecks, dndCtxProp)}</>}
     </DragAndDropContext>
   )
 }
