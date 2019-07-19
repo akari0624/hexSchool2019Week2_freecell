@@ -1,104 +1,76 @@
-import React, { useCallback, useState } from 'react'
-import Styled from 'styled-components'
-import {
-  DragDropContext,
-  DropResult,
-  DragStart,
-  ResponderProvided
-} from 'react-beautiful-dnd'
-import CardDeck from './containers/CardDeck'
-import GreenTable from '../../../assets/green_felt.jpg'
+import React, { useCallback, useState, ReactNode } from 'react'
+import _cloneDeep from 'lodash.clonedeep'
+import { DragAndDropContext, Droppable, Draggable } from '../../utils/DnDModule'
+import { DnDTransData } from '../../utils/DnDModule/models'
+import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
+import { CardDeckArea, PorkerCard, DecksWrapper } from './Styled'
 
-const MainTable = Styled.main`
-  width: 100vw;
-  height: 100vh;
-  background-image: url(${GreenTable});
-  overflow: hidden;
-  display: flex;
-`
-
-interface DeckProps {
-  marginLeft: string
-  marginTop: string
+type Card = {
+  value: number
+  dragId: string
 }
 
-const CardDeckWrapper = Styled.section<DeckProps>`
-  margin-left:${props => props.marginLeft};
-  margin-top:${props => props.marginTop};
-`
+const cardData = new Map<string, Card[]>()
+cardData.set('dropable1', [
+  { value: 111, dragId: 'card1' },
+  { value: 222, dragId: 'card2' }
+])
+cardData.set('dropable2', [{ value: 333, dragId: 'card3' }])
 
-interface Props {}
-
-type DragStartFuncType = (
-  initial: DragStart,
-  provided: ResponderProvided
-) => void
-
-type Cards = {
-  dropArea1: number[]
-  dropArea2: number[]
+const renderDecks = (
+  cardDecks: Map<string, Card[]>,
+  dndCtxProp: DNDCtxProps
+): ReactNode[] => {
+  let elementsArr: ReactNode[] = []
+  for (let [deckKey, cards] of cardDecks.entries()) {
+    elementsArr.push(
+      <Droppable key={deckKey} droppableId={deckKey} {...dndCtxProp}>
+        {propsFromDroppable => (
+          <CardDeckArea {...propsFromDroppable}>
+            {cards.map((card, idx) => (
+              <Draggable
+                key={card.dragId}
+                draggableItemId={card.dragId}
+                belongDroppableId={deckKey}
+                index={idx}
+                isDraggable={idx === cards.length - 1 ? true : false}
+              >
+                <PorkerCard>{card.value}</PorkerCard>
+              </Draggable>
+            ))}
+          </CardDeckArea>
+        )}
+      </Droppable>
+    )
+  }
+  return elementsArr
 }
 
-const defaultCardState = {
-  dropArea1: [1, 2, 3, 4, 5, 6, 7, 8],
-  dropArea2: [9, 10, 11, 12, 13]
-}
+export default function Index2() {
+  const [cardDecks, setCardDecks] = useState<Map<string, Card[]>>(cardData)
 
-export default (props: Props) => {
-  const [nowDraggingDroppableId, setNowDraggingDroppableId] = useState('')
-  const [cards, setCards] = useState<Cards>(defaultCardState)
-  const onDragEnd = useCallback(
-    (result: DropResult) => {
-      console.log(result)
+  const onDropDone = useCallback(
+    (data: DnDTransData) => {
+      const { from, to } = data
 
-      if (!result.destination) {
-        return
-      }
+      setCardDecks(prevDeck => {
+        console.log('topLevel, from:to =', from, to)
+        const newDecks = _cloneDeep(prevDeck)
+        const moveData = prevDeck.get(from.fromDroppableId)[from.dragItemIndex]
+        newDecks.get(to).push(moveData)
+        newDecks.get(from.fromDroppableId).splice(from.dragItemIndex, 1)
 
-      result.destination.droppableId
-      const source = cards[`${result.source.droppableId}`]
-      const newSource = source.slice(0, source.length - 1) //少一張
-
-      const moveTo = cards[`${result.draggableId}`]
-      const newMoveTo = [...moveTo, result.draggableId]
-
-      const newCards = {}
-      newCards[`${result.source.droppableId}`] = newSource
-      newCards[`${result.draggableId}`] = newMoveTo
-
-      setCards(() => newCards as Cards)
-      setNowDraggingDroppableId(() => '')
+        return newDecks
+      })
     },
-
-    [cards]
+    [cardDecks]
   )
 
-  const onDragStart = useCallback<DragStartFuncType>(
-    initial => {
-      const nowDraggingDropAreaId = initial.source.droppableId
-      setNowDraggingDroppableId(() => nowDraggingDropAreaId)
-    },
-    [setNowDraggingDroppableId]
-  )
   return (
-    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-      <MainTable>
-        <CardDeckWrapper marginLeft="300px" marginTop="300px">
-          <CardDeck
-            pokerCards={cards.dropArea1}
-            droppableId="dropArea1"
-            nowDraggingAreaId={nowDraggingDroppableId}
-          />
-        </CardDeckWrapper>
-
-        <CardDeckWrapper marginLeft="600px" marginTop="300px">
-          <CardDeck
-            pokerCards={cards.dropArea2}
-            droppableId="dropArea2"
-            nowDraggingAreaId={nowDraggingDroppableId}
-          />
-        </CardDeckWrapper>
-      </MainTable>
-    </DragDropContext>
+    <DragAndDropContext onDropDone={onDropDone}>
+      {dndCtxProp => (
+        <DecksWrapper>{renderDecks(cardDecks, dndCtxProp)}</DecksWrapper>
+      )}
+    </DragAndDropContext>
   )
 }

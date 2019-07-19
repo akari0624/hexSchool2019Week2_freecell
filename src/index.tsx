@@ -5,8 +5,8 @@ import { createStore, applyMiddleware } from 'redux'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import reducers from './reducers'
 import { StyledComponentGlobalStyle } from './themes/globalStyle'
+import rbd_example_archive from './pages/mainpage/rbd_example_archive'
 import indexRouter from './pages/mainpage'
-import indexRouter2 from './pages/mainpage/index2'
 
 const createStoreWithMiddleware = applyMiddleware()(createStore)
 
@@ -30,7 +30,7 @@ ReactDOM.render(
       <BrowserRouter>
         <div>
           <Switch>
-            <Route path="/page2" component={indexRouter2} />
+            <Route path="/page2" component={rbd_example_archive} />
             <Route path="/" component={indexRouter} />
           </Switch>
         </div>
