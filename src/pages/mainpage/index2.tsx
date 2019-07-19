@@ -3,16 +3,13 @@ import _cloneDeep from 'lodash.clonedeep'
 import { DragAndDropContext, Droppable, Draggable } from '../../utils/DnDModule'
 import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
+import { CardDeckArea } from './Styled'
 
 type Card = {
   value: number
   dragId: string
 }
 
-type CardDeck = {
-  dropId: string
-  cards: Card[]
-}
 
 const cardData = new Map<string, Card[]>()
 cardData.set('dropable1', [
@@ -20,6 +17,8 @@ cardData.set('dropable1', [
   { value: 222, dragId: 'card2' }
 ])
 cardData.set('dropable2', [{ value: 333, dragId: 'card3' }])
+
+
 
 const renderDecks = (
   cardDecks: Map<string, Card[]>,
@@ -29,21 +28,26 @@ const renderDecks = (
   for (let [deckKey, cards] of cardDecks.entries()) {
     elementsArr.push(
       <Droppable key={deckKey} droppableId={deckKey} {...dndCtxProp}>
-        {cards.map((card, idx) => (
-          <Draggable
-            key={card.dragId}
-            draggableItemId={card.dragId}
-            belongDroppableId={deckKey}
-            index={idx}
-          >
-            <div>{card.value}</div>
-          </Draggable>
-        ))}
+        {propsFromDroppable => (
+          <CardDeckArea {...propsFromDroppable}>
+            {cards.map((card, idx) => (
+              <Draggable
+                key={card.dragId}
+                draggableItemId={card.dragId}
+                belongDroppableId={deckKey}
+                index={idx}
+              >
+                <div>{card.value}</div>
+              </Draggable>
+            ))}
+          </CardDeckArea>
+        )}
       </Droppable>
     )
   }
   return elementsArr
 }
+
 
 export default function Index2() {
   const [cardDecks, setCardDecks] = useState<Map<string, Card[]>>(cardData)
