@@ -4,7 +4,8 @@ import {
   DragAndDropContext,
   Droppable,
   Draggable
-} from '../../components/utils'
+} from '../../utils/DnDModule'
+import { DnDTransData } from '../../utils/DnDModule/models'
 
 type Card = {
   value: number
@@ -24,8 +25,8 @@ export default function Index2() {
     },
     { dropId: 'dropable2', cards: [{ value: 333, dragId: 'card3' }] }
   ])
-  const onDropDone = useCallback((dropId: string, dragId: string) => {
-    console.log('atLevel', dropId, dragId)
+  const onDropDone = useCallback((data: DnDTransData) => {
+    console.log('atLevel, from:to:dragged =', data.from, data.to, data.dragItemId)
     const newDecks = _cloneDeep(cardDecks)
     newDecks[0][`cards`].push({ value: 333, dragId: 'card3' })
     setCardDecks(newDecks)
@@ -42,7 +43,7 @@ export default function Index2() {
               {...dndCtxProp}
             >
               {deck.cards.map(card => (
-                <Draggable key={card.dragId} draggableItemId={card.dragId}>
+                <Draggable key={card.dragId} draggableItemId={card.dragId} belongDroppableId={deck.dropId}>
                   <div>{card.value}</div>
                 </Draggable>
               ))}

@@ -1,6 +1,7 @@
 import React, { useCallback, ReactNode } from 'react'
 import styled from 'styled-components'
 import { DNDCtxProps } from './DropAndDragContext'
+import {DnDModuleConstants} from './constant'
 
 const DropWrapper = styled.div`
   width: 300px;
@@ -20,8 +21,9 @@ const Droppable: React.FC<DroppablePropsMerged> = props => {
 
   const dropHandler = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
-      const draggedId = e.dataTransfer.getData('dragItemId')
-      onDropDoneCB(droppableId, draggedId)
+      const draggedId = e.dataTransfer.getData(DnDModuleConstants.dragItemId)
+      const fromWhichDroppable = e.dataTransfer.getData(DnDModuleConstants.belongDroppableId)
+      onDropDoneCB({from: fromWhichDroppable, to: droppableId, dragItemId: draggedId})
     },
     [droppableId]
   )

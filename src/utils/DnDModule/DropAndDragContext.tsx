@@ -1,20 +1,21 @@
 import React, { useCallback } from 'react'
+import { DnDTransData } from './models'
 
 interface Props {
   children: (propObj: DNDCtxProps) => JSX.Element
-  onDropDone: (nowDroppedId: string, dragItemId: string) => void
+  onDropDone: (data: DnDTransData) => void
 }
 
 export interface DNDCtxProps {
-  onDropDoneCB: (nowDroppedId: string, dragItemId: string) => void
+  onDropDoneCB: (data: DnDTransData) => void
 }
 
 export default function DropAndDragContext(props: Props) {
   const { onDropDone } = props
   // callback
   const onDropDoneCB = useCallback(
-    (nowDroppedId: string, dragItemId: string) => {
-      onDropDone(nowDroppedId, dragItemId)
+    (data: DnDTransData) => {
+      onDropDone(data)
     },
     [onDropDone]
   )
