@@ -33,6 +33,7 @@ const renderDecks = (
                 draggableItemId={card.dragId}
                 belongDroppableId={deckKey}
                 index={idx}
+                isDraggable={idx === cards.length - 1 ? true : false}
               >
                 <PorkerCard>{card.value}</PorkerCard>
               </Draggable>

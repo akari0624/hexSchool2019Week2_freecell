@@ -5,10 +5,11 @@ interface Props {
   belongDroppableId: string
   children: JSX.Element
   index: number
+  isDraggable?: boolean
 }
 
 export default function Draggable(props: Props) {
-  const { draggableItemId, belongDroppableId, index } = props
+  const { draggableItemId, belongDroppableId, index, isDraggable = true } = props
   const onDragStartHandler = useCallback(
     (e: React.DragEvent<HTMLElement>) => {
       e.dataTransfer.setData(DnDModuleConstants.dragItemId, draggableItemId)
@@ -18,7 +19,7 @@ export default function Draggable(props: Props) {
     [draggableItemId]
   )
   return (
-    <div draggable={true} onDragStart={onDragStartHandler}>
+    <div draggable={isDraggable} onDragStart={onDragStartHandler}>
       {props.children}
     </div>
   )
