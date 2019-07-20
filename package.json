@@ -13,9 +13,8 @@
     "distWithBabel": "NODE_ENV=withBabel npm run clean && webpack --config ./webpack_config/webpack.config.prod.js --progress --bail --env dist -p",
     "deploy": "npm run dist && npm run cp_favi && gh-pages -d dist",
     "deployWithBabel": "npm run distWithBabel && gh-pages -d dist",
-    "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./test/test_helper.js --recursive ./test",
-    "test_ts": "mocha --require ts-node/register './test/**/*.{ts, tsx}'",
-    "test:watch": "npm run test -- --watch",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch --verbose",
     "cp_favi": "cp ./favicon.ico ./dist",
     "clean": "rimraf dist/*"
   },
@@ -23,6 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.5.4",
+    "@babel/node": "^7.5.5",
     "@babel/plugin-proposal-class-properties": "^7.5.0",
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/plugin-proposal-do-expressions": "^7.5.0",
@@ -41,8 +41,12 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.5.4",
     "@babel/preset-react": "^7.0.0",
+    "@testing-library/jest-dom": "^4.0.0",
+    "@testing-library/react": "^8.0.5",
+    "@types/jest": "^24.0.15",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.8",
     "@types/react": "^16.8.23",
     "@types/react-beautiful-dnd": "^11.0.2",
     "@types/react-dom": "^16.8.4",
@@ -71,6 +75,7 @@
     "gh-pages": "^2.0.1",
     "html-webpack-plugin": "^3.2.0",
     "install": "^0.13.0",
+    "jest": "^24.8.0",
     "jquery": "^3.4.1",
     "jsdom": "^15.1.1",
     "less": "^3.9.0",
@@ -80,6 +85,7 @@
     "rimraf": "^2.6.3",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
+    "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
@@ -101,5 +107,20 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.3.2"
+  },
+  "jest": {
+    "rootDir": "src",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__test__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
