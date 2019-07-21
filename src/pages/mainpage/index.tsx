@@ -5,35 +5,83 @@ import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
 import { CardDeckArea, PorkerCard, DecksWrapper } from './Styled'
 import { CardPic } from '../../../assets'
-import { getCards } from '../../game_logic'
+import { getAllCards, getPartitalCards } from '../../game_logic'
+import { BelowCardDroppableArea } from './constants'
+
 type Card = {
   value: number
   dragId: string
   cardImgSrc: string
 }
 
-const cardsArr = getCards(30)
+const cardsArr = getAllCards(30)
 
 const cardData = new Map<string, Card[]>()
-cardData.set('dropable1', [
-  {
-    value: cardsArr[0],
-    dragId: '' + cardsArr[0],
-    cardImgSrc: CardPic[cardsArr[0]],
-  },
-  {
-    value: cardsArr[1],
-    dragId: '' + cardsArr[1],
-    cardImgSrc: CardPic[cardsArr[1]],
-  },
-])
-cardData.set('dropable2', [
-  {
-    value: cardsArr[2],
-    dragId: '' + cardsArr[2],
-    cardImgSrc: CardPic[cardsArr[2]],
-  },
-])
+
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE1,
+  getPartitalCards(0, 6, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE2,
+  getPartitalCards(7, 13, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE3,
+  getPartitalCards(14, 20, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE4,
+  getPartitalCards(21, 27, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE5,
+  getPartitalCards(28, 33, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE6,
+  getPartitalCards(34, 39, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE7,
+  getPartitalCards(40, 45, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
+cardData.set(
+  BelowCardDroppableArea.DROPPABLE8,
+  getPartitalCards(46, 51, cardsArr).map(cn => ({
+    value: cn,
+    dragId: '' + cn,
+    cardImgSrc: CardPic[cn],
+  }))
+)
 
 const renderDecks = (
   cardDecks: Map<string, Card[]>,
@@ -54,7 +102,10 @@ const renderDecks = (
                 isDraggable={idx === cards.length - 1 ? true : false}
               >
                 <PorkerCard>
-                  <img src={card.cardImgSrc} />
+                  <img
+                    draggable={idx === cards.length - 1 ? true : false}
+                    src={card.cardImgSrc}
+                  />
                 </PorkerCard>
               </Draggable>
             ))}

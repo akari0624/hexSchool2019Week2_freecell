@@ -22,6 +22,11 @@ const shuffle = (times: number, numberArr: number[]) => {
   return numberArr
 }
 
-export const getCards = (swapTimes: number) => {
+export const getAllCards = (swapTimes: number) => {
   return shuffle(swapTimes, distributeCards())
+}
+
+// 拿第幾張牌 到 第幾張牌
+export const getPartitalCards = (from: number, to: number, cards: number[]) => {
+  return cards.slice(from, to + 1)
 }
