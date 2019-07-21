@@ -2,7 +2,7 @@
 const distributeCards = () => {
   const cardNumberArr = Array(52)
     .fill(0)
-    .map((e, i) => i + 1)
+    .map((e, i) => i)
   return cardNumberArr
 }
 
