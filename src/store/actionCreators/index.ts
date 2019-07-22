@@ -8,7 +8,7 @@ const initSwappedDroppingDecks = createAction(
 )
 
 const onDndDroppingDecksCardsDone = createAction(
-  DroppingDeckActionType.INIT_SWAPPED_CARDS,
+  DroppingDeckActionType.DND_DROPPING_DECK_CARD,
   (payload: DnDTransData) => payload
 )
 
