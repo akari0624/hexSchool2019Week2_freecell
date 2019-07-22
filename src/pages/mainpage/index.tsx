@@ -10,9 +10,13 @@ import { BelowCardDroppableArea, TopLeftTempDekArea } from './constants'
 import PorkerCardOnTmpDeck from '../../components/tmpDeck'
 import { Card, AppState } from '../../store/types'
 import {
-  initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
-} from '../../store/actionCreators'
+  onDndDroppingToTmpArea,
+} from '../../store/actionCreators/reducers'
+import {
+  initSwappedDroppingDecks,
+  handleDnd,
+} from '../../store/actionCreators/sagas'
 
 const renderTmpDecks = (
   tmpDeckCardData: Map<string, Card[]>,
@@ -68,10 +72,10 @@ const renderDecks = (
 
 export default function IndexPage() {
   const droppingDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.droppingDecks
+    appState => appState.droppingDecks,
   )
   const tmpDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.tmpDecks
+    appState => appState.tmpDecks,
   )
   const dispatch = useDispatch()
 
@@ -82,7 +86,7 @@ export default function IndexPage() {
 
   const onDropDone = useCallback(
     (data: DnDTransData) => {
-      dispatch(onDndDroppingDecksCardsDone(data))
+      dispatch(handleDnd(data))
     },
     [dispatch]
   )

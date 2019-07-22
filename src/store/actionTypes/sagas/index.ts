@@ -1,0 +1,4 @@
+export enum DroppingDeckActionTypeSAGA {
+  INIT_SWAPPED_CARDS_SAGA = 'INIT_SWAPPED_CARDS_SAGA',
+  HANDLE_DND = 'HANDLE_DND',
+}

@@ -6,9 +6,8 @@ import {
 import { Card } from '../../types'
 import { Action } from 'redux-actions'
 import _cloneDeep from 'lodash.clonedeep'
-import { DroppingDeckActionType } from '../../actionTypes'
-import { getPartitalCards, isCanPut_BelowDecks } from '../../../game_logic'
-import { CardPic } from '../../../../assets'
+import { DroppingDeckActionType } from '../../actionTypes/reducers'
+import { isCanPut_BelowDecks, } from '../../../game_logic'
 import { DnDTransData } from '../../../utils/DnDModule/models'
 
 const getDefaultTmpDecksState = () => {
@@ -24,7 +23,7 @@ const getDefaultTmpDecksState = () => {
   return tmpDeckCardData
 }
 
-const tmpDecksReducer = (state = getDefaultTmpDecksState(), action) => {
+const tmpDecksReducer = (state = getDefaultTmpDecksState(), action: Action<DnDTransData>) => {
   return state
 }
 
@@ -45,7 +44,7 @@ const finishDecksReducer = (state = getDefaultFinishDecksState(), action) => {
   return state
 }
 
-const getDefaultDroppingDecksState = () => {
+export const getDefaultDroppingDecksState = () => {
   const finishDeckCardData = new Map<BelowCardDroppableArea, Card[]>()
 
   finishDeckCardData.set(BelowCardDroppableArea.DROPPABLE1, [])
@@ -66,75 +65,7 @@ const getDefaultDroppingDecksState = () => {
   return finishDeckCardData
 }
 
-const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
-  const cardData = getDefaultDroppingDecksState()
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE1,
-    getPartitalCards(0, 6, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE2,
-    getPartitalCards(7, 13, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE3,
-    getPartitalCards(14, 20, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE4,
-    getPartitalCards(21, 27, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE5,
-    getPartitalCards(28, 33, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE6,
-    getPartitalCards(34, 39, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE7,
-    getPartitalCards(40, 45, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
-  cardData.set(
-    BelowCardDroppableArea.DROPPABLE8,
-    getPartitalCards(46, 51, cardsNumberArr).map(cn => ({
-      value: cn,
-      dragId: '' + cn,
-      cardImgSrc: CardPic[cn],
-    }))
-  )
 
-  return cardData
-}
 
 const dragLastCardFromThisDraggable = (
   cardMap: Map<string, Card[]>,
@@ -165,13 +96,13 @@ const dndDoneOnDroppingDeckArea = (
 
 const droppingDecksReducer = (
   state = getDefaultDroppingDecksState(),
-  action: Action<number[] | DnDTransData>
+  action: Action<Map<BelowCardDroppableArea, Card[]> | DnDTransData>
 ) => {
-  const { type: doWhat, payload } = action
+  const { type: doWhat, payload, } = action
 
   switch (doWhat) {
     case DroppingDeckActionType.INIT_SWAPPED_CARDS:
-      return setUpInitDroppingDecksCards(payload as number[])
+      return payload as Map<BelowCardDroppableArea, Card[]>
     case DroppingDeckActionType.DND_DROPPING_DECK_CARD:
       return dndDoneOnDroppingDeckArea(state, payload as DnDTransData)
   }
