@@ -1,0 +1,4 @@
+export enum DroppingDeckActionType {
+  INIT_SWAPPED_CARDS = 'INIT_SWAPPED_CARDS',
+  DND_DROPPING_DECK_CARD = 'DND_DROPPING_DECK_CARD',
+}

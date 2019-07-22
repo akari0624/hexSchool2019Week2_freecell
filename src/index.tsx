@@ -3,9 +3,8 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import reducers from './reducers'
+import reducers from './store/reducers'
 import { StyledComponentGlobalStyle } from './themes/globalStyle'
-import rbd_example_archive from './pages/mainpage/rbd_example_archive'
 import indexRouter from './pages/mainpage'
 
 const createStoreWithMiddleware = applyMiddleware()(createStore)

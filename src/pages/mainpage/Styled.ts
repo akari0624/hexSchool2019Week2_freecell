@@ -1,11 +1,10 @@
 import styled from 'styled-components'
 
 export const CardDeckArea = styled.div`
-  width:150px;
+  width: 150px;
   height: 300px;
   border: 1px solid #000000;
 `
-
 
 export const PorkerCard = styled.div`
   width: 100px;

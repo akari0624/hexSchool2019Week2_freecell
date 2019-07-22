@@ -10,7 +10,7 @@ interface Props {
   holdCards: Card[]
 }
 
-export default function TempDeck(props: Props) {
+export default function FinishDeck(props: Props) {
   const { deckKey, dndCtxProp, holdCards } = props
   return (
     <Droppable key={deckKey} droppableId={deckKey} {...dndCtxProp}>
