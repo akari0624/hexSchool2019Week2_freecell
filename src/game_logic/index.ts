@@ -30,3 +30,15 @@ export const getAllCards = (swapTimes: number) => {
 export const getPartitalCards = (from: number, to: number, cards: number[]) => {
   return cards.slice(from, to + 1)
 }
+
+const porkerCardQuantity = 13
+/** 兩張牌的數字和如果是 porkerCardQuantity的奇數倍 然後餘數等於那個 商  代表就是可以在下面放牌區 放下去  */
+export const isCanPut = (from: number, to: number) => {
+  const sum = from + to
+  const result = Math.floor(sum / porkerCardQuantity)
+  const remind = sum % porkerCardQuantity
+  if((result % 2) !== 0 &&  remind === result){
+    return true
+  }
+  return false
+}
