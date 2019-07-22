@@ -30,7 +30,6 @@ ReactDOM.render(
       <BrowserRouter>
         <div>
           <Switch>
-            <Route path="/page2" component={rbd_example_archive} />
             <Route path="/" component={indexRouter} />
           </Switch>
         </div>
