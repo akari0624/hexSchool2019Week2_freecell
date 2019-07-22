@@ -1,20 +1,22 @@
-import { all, put, take, select, } from 'redux-saga/effects'
+import { all, put, take, select } from 'redux-saga/effects'
 import { DroppingDeckActionTypeSAGA } from '../../actionTypes/sagas'
 import { Action } from 'redux-actions'
+import _cloneDeep from 'lodash.clonedeep'
 import {
   initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
   onDndDroppingToTmpArea,
 } from '../../actionCreators/reducers'
-import { getPartitalCards, isCanPut_BelowDecks, } from '../../../game_logic'
+import { getPartitalCards, isCanPut_BelowDecks } from '../../../game_logic'
 import { getDefaultDroppingDecksState } from '../../reducers/cards'
 import {
   TopLeftTempDekArea,
   TopRightFinishDeckDeck,
   BelowCardDroppableArea,
 } from '../../../pages/mainpage/constants'
-import { CardPic, } from '../../../../assets'
-import { DnDTransData, } from '../../../utils/DnDModule/models'
+import { CardPic } from '../../../../assets'
+import { DnDTransData } from '../../../utils/DnDModule/models'
+import { Card, AppState } from '../../types'
 
 const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
   const cardData = getDefaultDroppingDecksState()
@@ -24,7 +26,7 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
   cardData.set(
     BelowCardDroppableArea.DROPPABLE2,
@@ -32,7 +34,7 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
   cardData.set(
     BelowCardDroppableArea.DROPPABLE3,
@@ -40,7 +42,7 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
   cardData.set(
     BelowCardDroppableArea.DROPPABLE4,
@@ -48,7 +50,7 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
   cardData.set(
     BelowCardDroppableArea.DROPPABLE5,
@@ -56,7 +58,7 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
   cardData.set(
     BelowCardDroppableArea.DROPPABLE6,
@@ -64,7 +66,7 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
   cardData.set(
     BelowCardDroppableArea.DROPPABLE7,
@@ -72,7 +74,7 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
   cardData.set(
     BelowCardDroppableArea.DROPPABLE8,
@@ -80,16 +82,43 @@ const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
       value: cn,
       dragId: '' + cn,
       cardImgSrc: CardPic[cn],
-    }))
+    })),
   )
 
   return cardData
 }
 
+const dragLastCardFromThisDraggable = (
+  cardMap: Map<string, Card[]>,
+  draggableId: string,
+) => {
+  const cardsOfThisDropable = cardMap.get(draggableId)
+  const currLength = cardsOfThisDropable.length
+  return cardsOfThisDropable[currLength - 1].value
+}
+
+const dndDoneOnDroppingDeckArea = (
+  prevDeck: Map<string, Card[]>,
+  dndData: DnDTransData,
+) => {
+  const { from, to } = dndData
+  const toCardsId = dragLastCardFromThisDraggable(prevDeck, to)
+  if (!isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)) {
+    return prevDeck
+  }
+
+  const newDecks = _cloneDeep(prevDeck)
+  const moveData = prevDeck.get(from.fromDroppableId)[from.dragItemIndex]
+  newDecks.get(to).push(moveData)
+  newDecks.get(from.fromDroppableId).splice(from.dragItemIndex, 1)
+
+  return newDecks
+}
+
 function* initDroppingDecksFlow() {
   while (true) {
     const action: Action<number[]> = yield take(
-      DroppingDeckActionTypeSAGA.INIT_SWAPPED_CARDS_SAGA
+      DroppingDeckActionTypeSAGA.INIT_SWAPPED_CARDS_SAGA,
     )
     const { payload } = action
     const cardMap = setUpInitDroppingDecksCards(payload)
@@ -101,15 +130,22 @@ function* initDroppingDecksFlow() {
 function* onDropCompleteHandleDndFlow() {
   while (true) {
     const action: Action<DnDTransData> = yield take(
-      DroppingDeckActionTypeSAGA.HANDLE_DND
+      DroppingDeckActionTypeSAGA.HANDLE_DND,
     )
 
     const { payload } = action
 
     console.log('dnd drop completeData', payload)
     const toWhichDroppable = payload.to
+    const droppingDecks: Map<string, Card[]> = yield select(
+      (state: AppState) => state.droppingDecks,
+    )
     if (Object.values(BelowCardDroppableArea).includes(toWhichDroppable)) {
-      yield put(onDndDroppingDecksCardsDone(payload))
+      const newDroppingAreaCards = dndDoneOnDroppingDeckArea(
+        droppingDecks,
+        payload,
+      )
+      yield put(onDndDroppingDecksCardsDone(newDroppingAreaCards))
     }
 
     if (Object.values(TopLeftTempDekArea).includes(toWhichDroppable)) {
@@ -119,5 +155,5 @@ function* onDropCompleteHandleDndFlow() {
 }
 
 export default function* cardsRootSaga() {
-  yield all([initDroppingDecksFlow(), onDropCompleteHandleDndFlow(), ])
+  yield all([initDroppingDecksFlow(), onDropCompleteHandleDndFlow()])
 }
