@@ -5,18 +5,8 @@ export const CardDeckArea = styled.div`
   height: 300px;
   border: 1px solid #000000;
 `
-
-
-export const PorkerCard = styled.div`
+export const PorkerCardOnTmpDeck = styled.div`
   width: 100px;
   height: 90px;
   text-align: center;
-  margin-left: 10px;
-  margin-top: -50px;
-`
-
-export const DecksWrapper = styled.div`
-  width: 100%;
-  height: 50%;
-  display: flex;
 `

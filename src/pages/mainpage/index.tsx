@@ -5,10 +5,15 @@ import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
 import { CardDeckArea, PorkerCard, DecksWrapper } from './Styled'
 import { CardPic } from '../../../assets'
-import { getAllCards, getPartitalCards, isCanPut_BelowDecks } from '../../game_logic'
-import { BelowCardDroppableArea } from './constants'
+import {
+  getAllCards,
+  getPartitalCards,
+  isCanPut_BelowDecks,
+} from '../../game_logic'
+import { BelowCardDroppableArea, TopLeftTempDekArea } from './constants'
+import PorkerCardOnTmpDeck from '../../components/tmpDeck'
 
-type Card = {
+export type Card = {
   value: number
   dragId: string
   cardImgSrc: string
@@ -83,6 +88,34 @@ cardData.set(
   }))
 )
 
+const tmpDeckCardData = new Map<string, Card[]>()
+
+tmpDeckCardData.set(TopLeftTempDekArea.TEMP_DECK_1, [])
+
+tmpDeckCardData.set(TopLeftTempDekArea.TEMP_DECK_2, [])
+
+tmpDeckCardData.set(TopLeftTempDekArea.TEMP_DECK_3, [])
+
+tmpDeckCardData.set(TopLeftTempDekArea.TEMP_DECK_4, [])
+
+const renderTmpDecks = (
+  tmpDeckCardData: Map<string, Card[]>,
+  dndCtxProp: DNDCtxProps
+): ReactNode[] => {
+  let elementsArr: ReactNode[] = []
+  for (let [deckKey, cards] of tmpDeckCardData.entries()) {
+    elementsArr.push(
+      <PorkerCardOnTmpDeck
+        dndCtxProp={dndCtxProp}
+        deckKey={deckKey}
+        holdCards={cards}
+      />
+    )
+  }
+
+  return elementsArr
+}
+
 const renderDecks = (
   cardDecks: Map<string, Card[]>,
   dndCtxProp: DNDCtxProps
@@ -117,7 +150,10 @@ const renderDecks = (
   return elementsArr
 }
 
-const dragLastCardFromThisDraggable = (cardMap: Map<string, Card[]>, draggableId: string) => {
+const dragLastCardFromThisDraggable = (
+  cardMap: Map<string, Card[]>,
+  draggableId: string
+) => {
   const cardsOfThisDropable = cardMap.get(draggableId)
   const currLength = cardsOfThisDropable.length
   return cardsOfThisDropable[currLength - 1].value
@@ -133,7 +169,7 @@ export default function IndexPage() {
       console.log('topLevel, from:to =', from, to)
 
       const toCardsId = dragLastCardFromThisDraggable(prevDeck, to)
-      if(!isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)){
+      if (!isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)) {
         return prevDeck
       }
 
@@ -149,7 +185,12 @@ export default function IndexPage() {
   return (
     <DragAndDropContext onDropDone={onDropDone}>
       {dndCtxProp => (
-        <DecksWrapper>{renderDecks(cardDecks, dndCtxProp)}</DecksWrapper>
+        <>
+          <DecksWrapper>
+            {renderTmpDecks(tmpDeckCardData, dndCtxProp)}
+          </DecksWrapper>
+          <DecksWrapper>{renderDecks(cardDecks, dndCtxProp)}</DecksWrapper>
+        </>
       )}
     </DragAndDropContext>
   )
