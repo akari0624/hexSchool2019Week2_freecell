@@ -5,7 +5,7 @@ import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
 import { CardDeckArea, PorkerCard, DecksWrapper } from './Styled'
 import { CardPic } from '../../../assets'
-import { getAllCards, getPartitalCards } from '../../game_logic'
+import { getAllCards, getPartitalCards, isCanPut_BelowDecks } from '../../game_logic'
 import { BelowCardDroppableArea } from './constants'
 
 type Card = {
@@ -117,6 +117,12 @@ const renderDecks = (
   return elementsArr
 }
 
+const dragLastCardFromThisDraggable = (cardMap: Map<string, Card[]>, draggableId: string) => {
+  const cardsOfThisDropable = cardMap.get(draggableId)
+  const currLength = cardsOfThisDropable.length
+  return cardsOfThisDropable[currLength - 1].value
+}
+
 export default function IndexPage() {
   const [cardDecks, setCardDecks] = useState<Map<string, Card[]>>(cardData)
 
@@ -125,6 +131,12 @@ export default function IndexPage() {
 
     setCardDecks(prevDeck => {
       console.log('topLevel, from:to =', from, to)
+
+      const toCardsId = dragLastCardFromThisDraggable(prevDeck, to)
+      if(!isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)){
+        return prevDeck
+      }
+
       const newDecks = _cloneDeep(prevDeck)
       const moveData = prevDeck.get(from.fromDroppableId)[from.dragItemIndex]
       newDecks.get(to).push(moveData)

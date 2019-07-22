@@ -32,13 +32,23 @@ export const getPartitalCards = (from: number, to: number, cards: number[]) => {
 }
 
 const porkerCardQuantity = 13
-/** 兩張牌的數字和如果是 porkerCardQuantity的奇數倍 然後餘數等於那個 商  代表就是可以在下面放牌區 放下去  */
-export const isCanPut = (from: number, to: number) => {
-  const sum = from + to
-  const result = Math.floor(sum / porkerCardQuantity)
-  const remind = sum % porkerCardQuantity
-  if((result % 2) !== 0 &&  remind === result){
+/** to > from 跟 from > to 的時候，判斷規則不同  前者先base on 13 後者先base on 12  */
+export const isCanPut_BelowDecks = (from: number, to: number) => {
+  if (to > from) {
+    const difference = to - from
+    const result = Math.floor(difference / porkerCardQuantity)
+    const remind = difference % porkerCardQuantity
+    if (result % 2 !== 0 && remind === 1) {
+      return true
+    }
+    return false
+  }
+  // from > to
+  const difference = from - to
+  if (difference === 12) {
     return true
   }
-  return false
+  const count = Math.floor((difference - 12) / 13)
+  const result = count === 2 ? true : false
+  return result
 }
