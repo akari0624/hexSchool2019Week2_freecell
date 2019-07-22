@@ -26,38 +26,39 @@ import heart11 from './cards/1x/23_heart11.png'
 import heart12 from './cards/1x/24_heart12.png'
 import heart13 from './cards/1x/25_heart13.png'
 
-import diamond1 from './cards/1x/26_diamond01.png'
-import diamond2 from './cards/1x/27_diamond02.png'
-import diamond3 from './cards/1x/28_diamond03.png'
-import diamond4 from './cards/1x/29_diamond04.png'
-import diamond5 from './cards/1x/30_diamond05.png'
-import diamond6 from './cards/1x/31_diamond06.png'
-import diamond7 from './cards/1x/32_diamond07.png'
-import diamond8 from './cards/1x/33_diamond08.png'
-import diamond9 from './cards/1x/34_diamond09.png'
-import diamond10 from './cards/1x/35_diamond10.png'
-import diamond11 from './cards/1x/36_diamond11.png'
-import diamond12 from './cards/1x/37_diamond12.png'
-import diamond13 from './cards/1x/38_diamond13.png'
+import club1 from  './cards/1x/26_club01.png'
+import club2 from  './cards/1x/27_club02.png'
+import club3 from  './cards/1x/28_club03.png'
+import club4 from  './cards/1x/29_club04.png'
+import club5 from  './cards/1x/30_club05.png'
+import club6 from  './cards/1x/31_club06.png'
+import club7 from  './cards/1x/32_club07.png'
+import club8 from  './cards/1x/33_club08.png'
+import club9 from  './cards/1x/34_club09.png'
+import club10 from './cards/1x/35_club10.png'
+import club11 from './cards/1x/36_club11.png'
+import club12 from './cards/1x/37_club12.png'
+import club13 from './cards/1x/38_club13.png'
 
-import club1 from './cards/1x/39_club01.png'
-import club2 from './cards/1x/40_club02.png'
-import club3 from './cards/1x/41_club03.png'
-import club4 from './cards/1x/42_club04.png'
-import club5 from './cards/1x/43_club05.png'
-import club6 from './cards/1x/44_club06.png'
-import club7 from './cards/1x/45_club07.png'
-import club8 from './cards/1x/46_club08.png'
-import club9 from './cards/1x/47_club09.png'
-import club10 from './cards/1x/48_club10.png'
-import club11 from './cards/1x/49_club11.png'
-import club12 from './cards/1x/50_club12.png'
-import club13 from './cards/1x/51_club13.png'
+import diamond1 from  './cards/1x/39_diamond01.png'
+import diamond2 from  './cards/1x/40_diamond02.png'
+import diamond3 from  './cards/1x/41_diamond03.png'
+import diamond4 from  './cards/1x/42_diamond04.png'
+import diamond5 from  './cards/1x/43_diamond05.png'
+import diamond6 from  './cards/1x/44_diamond06.png'
+import diamond7 from  './cards/1x/45_diamond07.png'
+import diamond8 from  './cards/1x/46_diamond08.png'
+import diamond9 from  './cards/1x/47_diamond09.png'
+import diamond10 from './cards/1x/48_diamond10.png'
+import diamond11 from './cards/1x/49_diamond11.png'
+import diamond12 from './cards/1x/50_diamond12.png'
+import diamond13 from './cards/1x/51_diamond13.png'
 
-// 0 ~ 12 是  黑桃 squade
-// 13 ~ 25 是 紅心 heart
-// 26 ~ 38 是 方塊 diamond
-// 39 ~ 51 是 梅花 club
+
+// 0 ~ 12 是  黑桃 squade    黑
+// 13 ~ 25 是 紅心 heart     紅
+// 26 ~ 38 是  梅花 club     黑
+// 39 ~ 51 是 方塊 diamond   紅
 
 export const CardPic = {
   0: squade1,
@@ -88,31 +89,33 @@ export const CardPic = {
   24: heart12,
   25: heart13,
 
-  26: diamond1,
-  27: diamond2,
-  28: diamond3,
-  29: diamond4,
-  30: diamond5,
-  31: diamond6,
-  32: diamond7,
-  33: diamond8,
-  34: diamond9,
-  35: diamond10,
-  36: diamond11,
-  37: diamond12,
-  38: diamond13,
+  26: club1,
+  27: club2,
+  28: club3,
+  29: club4,
+  30: club5,
+  31: club6,
+  32: club7,
+  33: club8,
+  34: club9,
+  35: club10,
+  36: club11,
+  37: club12,
+  38: club13,
 
-  39: club1,
-  40: club2,
-  41: club3,
-  42: club4,
-  43: club5,
-  44: club6,
-  45: club7,
-  46: club8,
-  47: club9,
-  48: club10,
-  49: club11,
-  50: club12,
-  51: club13,
+  39: diamond1,
+  40: diamond2,
+  41: diamond3,
+  42: diamond4,
+  43: diamond5,
+  44: diamond6,
+  45: diamond7,
+  46: diamond8,
+  47: diamond9,
+  48: diamond10,
+  49: diamond11,
+  50: diamond12,
+  51: diamond13,
+
+
 }
