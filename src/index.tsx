@@ -2,13 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
+import createSagaMiddleware from 'redux-saga'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import reducers from './reducers'
+import reducers from './store/reducers'
 import { StyledComponentGlobalStyle } from './themes/globalStyle'
-import rbd_example_archive from './pages/mainpage/rbd_example_archive'
 import indexRouter from './pages/mainpage'
+import logicRootSagaArray from './store/sagas'
 
-const createStoreWithMiddleware = applyMiddleware()(createStore)
+
+const sagaMiddleware = createSagaMiddleware()
+
+const createStoreWithMiddleware = applyMiddleware(sagaMiddleware)(createStore)
 
 let appStore: any
 
@@ -23,6 +27,10 @@ if (process.env.NODE_ENV === 'production') {
   )
 }
 
+logicRootSagaArray.forEach(kindOfSomeFlowSaga =>
+  sagaMiddleware.run(kindOfSomeFlowSaga)
+)
+
 ReactDOM.render(
   <>
     <StyledComponentGlobalStyle />
@@ -30,7 +38,6 @@ ReactDOM.render(
       <BrowserRouter>
         <div>
           <Switch>
-            <Route path="/page2" component={rbd_example_archive} />
             <Route path="/" component={indexRouter} />
           </Switch>
         </div>

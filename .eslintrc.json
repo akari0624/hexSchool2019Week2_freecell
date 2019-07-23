@@ -33,9 +33,9 @@
       "comma-dangle": ["warn", {
         "arrays": "always",
         "objects": "always",
-        "imports": "never",
-        "exports": "never",
-        "functions": "never"
+        "imports": "always",
+        "exports": "always",
+        "functions": "always"
     }]
     },
     "globals": {
