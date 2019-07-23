@@ -14,13 +14,19 @@ const onDndDroppingDecksCardsDone = createAction(
   (payload: Map<string, Card[]>) => payload,
 )
 
-const onDndDroppingToTmpArea = createAction(
+const onCardCanBeMovedToTmpArea = createAction(
   DroppingDeckActionType.DND_TMP_DECK_CARD,
-  (payload: DnDTransData) => payload,
+  (payload: Map<string, Card[]>) => payload,
+)
+
+const onCardCanNotBeMoveToTmpArea = createAction(
+  DroppingDeckActionType.DND_TMP_DECK_CARD_CAN_NOT_PUT,
+  () => {}
 )
 
 export {
   initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
-  onDndDroppingToTmpArea,
+  onCardCanBeMovedToTmpArea,
+  onCardCanNotBeMoveToTmpArea,
 }

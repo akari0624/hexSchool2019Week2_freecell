@@ -23,8 +23,14 @@ const getDefaultTmpDecksState = () => {
 
 const tmpDecksReducer = (
   state = getDefaultTmpDecksState(),
-  action: Action<DnDTransData>,
+  action: Action<Map<TopLeftTempDekArea, Card[]>>,
 ) => {
+  switch(action.type){
+    case DroppingDeckActionType.DND_TMP_DECK_CARD:
+      return action.payload
+    case DroppingDeckActionType.DND_TMP_DECK_CARD_CAN_NOT_PUT:
+      return state
+  }
   return state
 }
 

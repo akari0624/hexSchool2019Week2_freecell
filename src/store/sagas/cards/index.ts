@@ -5,7 +5,8 @@ import _cloneDeep from 'lodash.clonedeep'
 import {
   initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
-  onDndDroppingToTmpArea,
+  onCardCanBeMovedToTmpArea,
+  onCardCanNotBeMoveToTmpArea,
 } from '../../actionCreators/reducers'
 import { getPartitalCards, isCanPut_BelowDecks } from '../../../game_logic'
 import { getDefaultDroppingDecksState } from '../../reducers/cards'
@@ -149,7 +150,26 @@ function* onDropCompleteHandleDndFlow() {
     }
 
     if (Object.values(TopLeftTempDekArea).includes(toWhichDroppable)) {
-      yield put(onDndDroppingToTmpArea(payload))
+      const tmpDecks: Map<string, Card[]> = yield select(
+        (state: AppState) => state.tmpDecks,
+      )
+      const tmpDeckCards = tmpDecks.get(toWhichDroppable)
+      if (tmpDeckCards.length === 0) {
+        const { fromDroppableId, dragItemIndex } = payload.from
+
+        const newDroppingDecks = _cloneDeep(droppingDecks)
+        const newTmpDecks = _cloneDeep(tmpDecks)
+        const moveToTmpCard = droppingDecks.get(fromDroppableId)[dragItemIndex]
+        newTmpDecks.get(toWhichDroppable).push(moveToTmpCard)
+        newDroppingDecks.get(fromDroppableId).splice(dragItemIndex, 1)
+
+        yield put(onDndDroppingDecksCardsDone(newDroppingDecks))
+        yield put(onCardCanBeMovedToTmpArea(newTmpDecks))
+
+      }else{
+         yield put(onCardCanNotBeMoveToTmpArea())
+      }
+      
     }
   }
 }
