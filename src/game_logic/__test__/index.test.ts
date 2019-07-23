@@ -17,7 +17,7 @@ describe('can get correct card number array', () => {
   })
 })
 
-describe('test is can put logic', () => {
+describe('verify the is can put and can not put rule', () => {
 
   test('Squade 1 can put under heart 2', () => {
     expect(isCanPut_BelowDecks(0, 14)).toBe(true)
@@ -57,6 +57,10 @@ describe('test is can put logic', () => {
 
    test('diamond 1 can not put under heart 8', () => {
     expect(isCanPut_BelowDecks(39, 20)).toBe(false)
+  })
+
+   test('diamond 3 can not put under squade 2', () => {
+    expect(isCanPut_BelowDecks(41, 1)).toBe(false)
   })
 
 })
