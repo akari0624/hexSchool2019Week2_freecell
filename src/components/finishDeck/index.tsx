@@ -1,7 +1,7 @@
 import React from 'react'
 import { Droppable, Draggable } from '../../utils/DnDModule'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
-import { CardDeckArea, PorkerCardOnTmpDeck } from './Styled'
+import { CardDeckArea, PorkerCardOnFinishDeck } from './Styled'
 import { Card } from '../../store/types'
 
 interface Props {
@@ -24,12 +24,12 @@ export default function FinishDeck(props: Props) {
               index={idx}
               isDraggable={idx === holdCards.length - 1 ? true : false}
             >
-              <PorkerCardOnTmpDeck>
+              <PorkerCardOnFinishDeck>
                 <img
                   draggable={idx === holdCards.length - 1 ? true : false}
                   src={card.cardImgSrc}
                 />
-              </PorkerCardOnTmpDeck>
+              </PorkerCardOnFinishDeck>
             </Draggable>
           ))}
         </CardDeckArea>

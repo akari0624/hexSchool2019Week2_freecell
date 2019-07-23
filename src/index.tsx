@@ -9,6 +9,7 @@ import { StyledComponentGlobalStyle } from './themes/globalStyle'
 import indexRouter from './pages/mainpage'
 import logicRootSagaArray from './store/sagas'
 
+
 const sagaMiddleware = createSagaMiddleware()
 
 const createStoreWithMiddleware = applyMiddleware(sagaMiddleware)(createStore)

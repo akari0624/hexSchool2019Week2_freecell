@@ -48,6 +48,14 @@ const getDefaultFinishDecksState = () => {
 }
 
 const finishDecksReducer = (state = getDefaultFinishDecksState(), action) => {
+
+const { type: doWhat, payload } = action
+
+  switch (doWhat) {
+    case DroppingDeckActionType.DND_FINISHED_DECK_CARD_CAN_PUT:
+      return payload
+  }
+  
   return state
 }
 

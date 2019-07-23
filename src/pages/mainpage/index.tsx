@@ -1,18 +1,13 @@
 import React, { useCallback, useEffect, ReactNode } from 'react'
-import _cloneDeep from 'lodash.clonedeep'
 import { useSelector, useDispatch } from 'react-redux'
 import { DragAndDropContext, Droppable, Draggable } from '../../utils/DnDModule'
 import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
-import { CardDeckArea, PorkerCard, DecksWrapper } from './Styled'
+import { CardDeckArea, PorkerCard, DecksWrapper, UpperDecksWrapper, TmpAndFinishDecksAreaWrapper } from './Styled'
 import { getAllCards } from '../../game_logic'
-import { BelowCardDroppableArea, TopLeftTempDekArea } from './constants'
 import PorkerCardOnTmpDeck from '../../components/tmpDeck'
+import PorkerCardOnFinishDeck from '../../components/finishDeck'
 import { Card, AppState } from '../../store/types'
-import {
-  onDndDroppingDecksCardsDone,
-  onDndDroppingToTmpArea,
-} from '../../store/actionCreators/reducers'
 import {
   initSwappedDroppingDecks,
   handleDnd,
@@ -26,6 +21,24 @@ const renderTmpDecks = (
   for (let [deckKey, cards] of tmpDeckCardData.entries()) {
     elementsArr.push(
       <PorkerCardOnTmpDeck
+        dndCtxProp={dndCtxProp}
+        deckKey={deckKey}
+        holdCards={cards}
+      />
+    )
+  }
+
+  return elementsArr
+}
+
+const renderFinishDecks = (
+  finishDeckCardData: Map<string, Card[]>,
+  dndCtxProp: DNDCtxProps
+): ReactNode[] => {
+  let elementsArr: ReactNode[] = []
+  for (let [deckKey, cards] of finishDeckCardData.entries()) {
+    elementsArr.push(
+      <PorkerCardOnFinishDeck
         dndCtxProp={dndCtxProp}
         deckKey={deckKey}
         holdCards={cards}
@@ -77,6 +90,9 @@ export default function IndexPage() {
   const tmpDecks = useSelector<AppState, Map<string, Card[]>>(
     appState => appState.tmpDecks,
   )
+    const finishDecks = useSelector<AppState, Map<string, Card[]>>(
+    appState => appState.finishDecks,
+  )
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -95,7 +111,10 @@ export default function IndexPage() {
     <DragAndDropContext onDropDone={onDropDone}>
       {dndCtxProp => (
         <>
-          <DecksWrapper>{renderTmpDecks(tmpDecks, dndCtxProp)}</DecksWrapper>
+        <TmpAndFinishDecksAreaWrapper>
+          <UpperDecksWrapper>{renderTmpDecks(tmpDecks, dndCtxProp)}</UpperDecksWrapper>
+          <UpperDecksWrapper>{renderFinishDecks(finishDecks, dndCtxProp)}</UpperDecksWrapper>
+        </TmpAndFinishDecksAreaWrapper>  
           <DecksWrapper>{renderDecks(droppingDecks, dndCtxProp)}</DecksWrapper>
         </>
       )}

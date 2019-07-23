@@ -24,9 +24,15 @@ const onCardCanNotBeMoveToTmpArea = createAction(
   () => {}
 )
 
+const onCardCanBeMovedToFinishedArea = createAction(
+  DroppingDeckActionType.DND_FINISHED_DECK_CARD_CAN_PUT,
+  (payload: Map<string, Card[]>) => payload,
+)
+
 export {
   initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
   onCardCanBeMovedToTmpArea,
   onCardCanNotBeMoveToTmpArea,
+  onCardCanBeMovedToFinishedArea,
 }

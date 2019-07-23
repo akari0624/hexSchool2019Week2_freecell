@@ -7,8 +7,9 @@ import {
   onDndDroppingDecksCardsDone,
   onCardCanBeMovedToTmpArea,
   onCardCanNotBeMoveToTmpArea,
+  onCardCanBeMovedToFinishedArea,
 } from '../../actionCreators/reducers'
-import { getPartitalCards, isCanPut_BelowDecks } from '../../../game_logic'
+import { getPartitalCards, isCanPut_BelowDecks, isCanPutToThisFinishDeck } from '../../../game_logic'
 import { getDefaultDroppingDecksState } from '../../reducers/cards'
 import {
   TopLeftTempDekArea,
@@ -169,6 +170,31 @@ function* onDropCompleteHandleDndFlow() {
       }else{
          yield put(onCardCanNotBeMoveToTmpArea())
       }
+      
+    }
+
+    if (Object.values(TopRightFinishDeckDeck).includes(toWhichDroppable)) {
+      const finishDecks: Map<string, Card[]> = yield select(
+        (state: AppState) => state.finishDecks,
+      )
+      const finishingDeckCards = finishDecks.get(toWhichDroppable)
+      const { fromDroppableId, dragItemIndex, dragItemId } = payload.from
+      if (isCanPutToThisFinishDeck(parseInt(dragItemId, 10), toWhichDroppable, finishingDeckCards)) {
+        
+        const newDroppingDecks = _cloneDeep(droppingDecks)
+        const newFinishingDecks = _cloneDeep(finishDecks)
+        const moveToFinishingCard = droppingDecks.get(fromDroppableId)[dragItemIndex]
+        newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
+        newDroppingDecks.get(fromDroppableId).splice(dragItemIndex, 1)
+
+        yield put(onDndDroppingDecksCardsDone(newDroppingDecks))
+        yield put(onCardCanBeMovedToFinishedArea(newFinishingDecks))
+
+      }
+      
+      // else{
+      //    yield put(onCardCanNotBeMoveToTmpArea())
+      // }
       
     }
   }

@@ -1,3 +1,6 @@
+import { Card } from '../store/types'
+import { TopRightFinishDeckDeck } from '../pages/mainpage/constants'
+
 // 發牌
 const distributeCards = () => {
   const cardNumberArr = Array(52)
@@ -51,4 +54,71 @@ export const isCanPut_BelowDecks = (from: number, to: number) => {
   const count = Math.floor((difference - 12) / 13)
   const result = count === 2 ? true : false
   return result
+}
+
+/**  0~12 黑桃Squade, 13~25 紅心Heart, 26~38 梅花Club, 39~51 方塊Diamond */
+const fromCardNumberIdToKind = (numId: number): TopRightFinishDeckDeck => {
+
+   if(numId  >= 0 && numId <= 12){
+     return TopRightFinishDeckDeck.FINISH_SQUADE
+   }
+   else if(numId  >= 13 && numId <= 25){
+     return TopRightFinishDeckDeck.FINISH_HEART
+   }
+   else if(numId  >= 26 && numId <= 38){
+     return TopRightFinishDeckDeck.FINISH_CLUB
+   }
+   else if(numId  >= 39 && numId <= 51){
+     return TopRightFinishDeckDeck.FINISH_DIAMOND
+   }
+}
+
+const examineIsOkToPutInThisFinishDeckCard = (cardNumId: number, deckCards: Card[]) => {
+  if(deckCards.length === 0 && (cardNumId !== 0 && cardNumId !== 13 && cardNumId !== 26 && cardNumId !== 39)){
+    return false
+  }
+  const currFinishDeckCardQuantity = deckCards.length
+  if(currFinishDeckCardQuantity === 0){
+    return true
+  }
+  const currUppestCardNumId = deckCards[currFinishDeckCardQuantity -1].value
+  if((currUppestCardNumId + 1) !== cardNumId){
+    return false
+  }
+  return true
+}
+
+export const isCanPutToThisFinishDeck = (
+  cardNumId: number,
+  deckName: string,
+  deckCards: Card[],
+): boolean => {
+  console.log(cardNumId, deckName, deckCards)
+
+  switch (deckName) {
+    case TopRightFinishDeckDeck.FINISH_SQUADE:
+      if(fromCardNumberIdToKind(cardNumId) !== TopRightFinishDeckDeck.FINISH_SQUADE){
+        return false
+      }
+      return examineIsOkToPutInThisFinishDeckCard(cardNumId, deckCards)
+
+    case TopRightFinishDeckDeck.FINISH_HEART:
+      if(fromCardNumberIdToKind(cardNumId) !== TopRightFinishDeckDeck.FINISH_HEART){
+        return false
+      }
+      return examineIsOkToPutInThisFinishDeckCard(cardNumId, deckCards)
+
+    case TopRightFinishDeckDeck.FINISH_CLUB:
+      if(fromCardNumberIdToKind(cardNumId) !== TopRightFinishDeckDeck.FINISH_CLUB){
+        return false
+      }
+      return examineIsOkToPutInThisFinishDeckCard(cardNumId, deckCards)
+
+    case TopRightFinishDeckDeck.FINISH_DIAMOND:
+      if(fromCardNumberIdToKind(cardNumId) !== TopRightFinishDeckDeck.FINISH_DIAMOND){
+        return false
+      }
+      return examineIsOkToPutInThisFinishDeckCard(cardNumId, deckCards)
+  }
+  return false
 }

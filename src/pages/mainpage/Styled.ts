@@ -14,6 +14,16 @@ export const PorkerCard = styled.div`
   margin-top: -50px;
 `
 
+export const TmpAndFinishDecksAreaWrapper = styled.div`
+  display: flex;
+`
+
+export const UpperDecksWrapper = styled.div`
+  width: 50%;
+  height: 50%;
+  display: flex;
+`
+
 export const DecksWrapper = styled.div`
   width: 100%;
   height: 50%;

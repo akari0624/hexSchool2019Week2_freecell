@@ -5,7 +5,7 @@ export const CardDeckArea = styled.div`
   height: 300px;
   border: 1px solid #000000;
 `
-export const PorkerCardOnTmpDeck = styled.div`
+export const PorkerCardOnFinishDeck = styled.div`
   width: 100px;
   height: 90px;
   text-align: center;
