@@ -10,6 +10,7 @@ import {
   onCardCanNotBeMoveToTmpArea,
   onCardCanBeMovedToFinishedArea,
   onCardCanBeMovedFromTmpDeckToFinishedArea,
+  onTmpDecksNeedToUpdate,
 } from '../../actionCreators/reducers'
 import {
   getPartitalCards,
@@ -23,8 +24,9 @@ import {
   BelowCardDroppableArea,
 } from '../../../pages/mainpage/constants'
 import { CardPic } from '../../../../assets'
-import { DnDTransData } from '../../../utils/DnDModule/models'
+import { DnDTransData, DragSource } from '../../../utils/DnDModule/models'
 import { Card, AppState } from '../../types'
+import _isEqual from 'lodash.isequal'
 
 const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
   const cardData = getDefaultDroppingDecksState()
@@ -105,22 +107,35 @@ const dragLastCardFromThisDraggable = (
   return cardsOfThisDropable[currLength - 1].value
 }
 
-const dndDoneOnDroppingDeckArea = (
-  prevDeck: Map<string, Card[]>,
-  dndData: DnDTransData,
+const handleTmpDecksCardsUpdate = (
+  prevTmpDeck: Map<string, Card[]>,
+  from: DragSource,
 ) => {
-  const { from, to } = dndData
-  const toCardsId = dragLastCardFromThisDraggable(prevDeck, to)
-  if (!isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)) {
-    return prevDeck
-  }
+  const newDecks = _cloneDeep(prevTmpDeck)
 
-  const newDecks = _cloneDeep(prevDeck)
-  const moveData = prevDeck.get(from.fromDroppableId)[from.dragItemIndex]
-  newDecks.get(to).push(moveData)
   newDecks.get(from.fromDroppableId).splice(from.dragItemIndex, 1)
 
   return newDecks
+}
+
+const dndDoneOnDroppingDeckArea = (
+  toDecks: Map<string, Card[]>,
+  dndData: DnDTransData,
+  fromDecks: Map<string, Card[]>
+) => {
+  const { from, to } = dndData
+  const toCardsId = dragLastCardFromThisDraggable(toDecks, to)
+  if (!isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)) {
+    return toDecks
+  }
+
+  const newToDecks = _cloneDeep(toDecks)
+  const moveData = fromDecks.get(from.fromDroppableId)[from.dragItemIndex]
+  newToDecks.get(to).push(moveData)
+  if(toDecks === fromDecks){
+    newToDecks.get(from.fromDroppableId).splice(from.dragItemIndex, 1)
+  }
+  return newToDecks
 }
 
 function* initDroppingDecksFlow() {
@@ -149,11 +164,43 @@ function* onDropCompleteHandleDndFlow() {
       const droppingDecks: Map<string, Card[]> = yield select(
         (state: AppState) => state.droppingDecks,
       )
-      if (Object.values(BelowCardDroppableArea).includes(toWhichDroppable)) {
+      // 從下牌區 拖放 到 下牌區
+      if (
+        Object.values(BelowCardDroppableArea).includes(
+          payload.from.fromDroppableId,
+        ) &&
+        Object.values(BelowCardDroppableArea).includes(toWhichDroppable)
+      ) {
         const newDroppingAreaCards = dndDoneOnDroppingDeckArea(
           droppingDecks,
           payload,
+          droppingDecks,
         )
+        yield put(onDndDroppingDecksCardsDone(newDroppingAreaCards))
+      }
+
+      // 從tmp區 拖放 到 下牌區
+      if (
+        Object.values(TopLeftTempDekArea).includes(
+          payload.from.fromDroppableId,
+        ) &&
+        Object.values(BelowCardDroppableArea).includes(toWhichDroppable)
+      ) {
+        const tmpDecks: Map<string, Card[]> = yield select(
+          (state: AppState) => state.tmpDecks,
+        )
+
+        const newDroppingAreaCards = dndDoneOnDroppingDeckArea(
+          droppingDecks,
+          payload,
+          tmpDecks,
+        )
+        // 不一樣的話 代表從tmp拉下來的那張牌可以放到下牌區，那tmp區的那張牌就要去除
+        if (!_isEqual(newDroppingAreaCards, droppingDecks)) {
+          const newTmpDecks = handleTmpDecksCardsUpdate(tmpDecks, payload.from)
+          yield put(onTmpDecksNeedToUpdate(newTmpDecks))
+        }
+
         yield put(onDndDroppingDecksCardsDone(newDroppingAreaCards))
       }
 
@@ -194,16 +241,15 @@ function* onDropCompleteHandleDndFlow() {
           )
         ) {
           const newFinishingDecks = _cloneDeep(finishDecks)
-         
 
           if (Object.values(BelowCardDroppableArea).includes(fromDroppableId)) {
             const newDroppingDecks = _cloneDeep(droppingDecks)
             newDroppingDecks.get(fromDroppableId).splice(dragItemIndex, 1)
 
-             const moveToFinishingCard = droppingDecks.get(fromDroppableId)[
-            dragItemIndex
-          ]
-          newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
+            const moveToFinishingCard = droppingDecks.get(fromDroppableId)[
+              dragItemIndex
+            ]
+            newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
 
             yield put(onDndDroppingDecksCardsDone(newDroppingDecks))
           } else if (
@@ -215,18 +261,16 @@ function* onDropCompleteHandleDndFlow() {
             const newTmpDecks = _cloneDeep(tmpDecks)
             newTmpDecks.get(fromDroppableId).splice(dragItemIndex, 1)
 
-             const moveToFinishingCard = tmpDecks.get(fromDroppableId)[
-            dragItemIndex
-          ]
-          newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
+            const moveToFinishingCard = tmpDecks.get(fromDroppableId)[
+              dragItemIndex
+            ]
+            newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
 
-
-           yield put(onCardCanBeMovedFromTmpDeckToFinishedArea(newTmpDecks))
+            yield put(onCardCanBeMovedFromTmpDeckToFinishedArea(newTmpDecks))
           }
 
           yield put(onCardCanBeMovedToFinishedArea(newFinishingDecks))
         }
-
       }
     } catch (err) {
       console.log(err)

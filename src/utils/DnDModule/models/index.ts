@@ -1,4 +1,4 @@
-type DragSource = {
+export type DragSource = {
   fromDroppableId: string
   dragItemId: string
   dragItemIndex: number

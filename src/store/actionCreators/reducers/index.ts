@@ -34,6 +34,11 @@ const onCardCanBeMovedFromTmpDeckToFinishedArea = createAction(
   (payload: Map<string, Card[]>) => payload,
 )
 
+const onTmpDecksNeedToUpdate = createAction(
+  DroppingDeckActionType.TMP_DECKS_UPDATE,
+  (payload: Map<string, Card[]>) => payload,
+)
+
 export {
   initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
@@ -41,4 +46,5 @@ export {
   onCardCanNotBeMoveToTmpArea,
   onCardCanBeMovedToFinishedArea,
   onCardCanBeMovedFromTmpDeckToFinishedArea,
+  onTmpDecksNeedToUpdate,
 }
