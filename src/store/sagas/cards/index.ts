@@ -104,6 +104,8 @@ const dragLastCardFromThisDraggable = (
 ) => {
   const cardsOfThisDropable = cardMap.get(draggableId)
   const currLength = cardsOfThisDropable.length
+
+  if(currLength === 0) {return -1}
   return cardsOfThisDropable[currLength - 1].value
 }
 
@@ -125,7 +127,7 @@ const dndDoneOnDroppingDeckArea = (
 ) => {
   const { from, to } = dndData
   const toCardsId = dragLastCardFromThisDraggable(toDecks, to)
-  if (!isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)) {
+  if (toCardsId !== -1 && !isCanPut_BelowDecks(parseInt(from.dragItemId, 10), toCardsId)) {
     return toDecks
   }
 
