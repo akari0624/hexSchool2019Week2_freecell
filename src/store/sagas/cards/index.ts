@@ -2,14 +2,20 @@ import { all, put, take, select } from 'redux-saga/effects'
 import { DroppingDeckActionTypeSAGA } from '../../actionTypes/sagas'
 import { Action } from 'redux-actions'
 import _cloneDeep from 'lodash.clonedeep'
+import swal from 'sweetalert2'
 import {
   initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
   onCardCanBeMovedToTmpArea,
   onCardCanNotBeMoveToTmpArea,
   onCardCanBeMovedToFinishedArea,
+  onCardCanBeMovedFromTmpDeckToFinishedArea,
 } from '../../actionCreators/reducers'
-import { getPartitalCards, isCanPut_BelowDecks, isCanPutToThisFinishDeck } from '../../../game_logic'
+import {
+  getPartitalCards,
+  isCanPut_BelowDecks,
+  isCanPutToThisFinishDeck,
+} from '../../../game_logic'
 import { getDefaultDroppingDecksState } from '../../reducers/cards'
 import {
   TopLeftTempDekArea,
@@ -131,71 +137,105 @@ function* initDroppingDecksFlow() {
 
 function* onDropCompleteHandleDndFlow() {
   while (true) {
-    const action: Action<DnDTransData> = yield take(
-      DroppingDeckActionTypeSAGA.HANDLE_DND,
-    )
-
-    const { payload } = action
-
-    console.log('dnd drop completeData', payload)
-    const toWhichDroppable = payload.to
-    const droppingDecks: Map<string, Card[]> = yield select(
-      (state: AppState) => state.droppingDecks,
-    )
-    if (Object.values(BelowCardDroppableArea).includes(toWhichDroppable)) {
-      const newDroppingAreaCards = dndDoneOnDroppingDeckArea(
-        droppingDecks,
-        payload,
+    try {
+      const action: Action<DnDTransData> = yield take(
+        DroppingDeckActionTypeSAGA.HANDLE_DND,
       )
-      yield put(onDndDroppingDecksCardsDone(newDroppingAreaCards))
-    }
 
-    if (Object.values(TopLeftTempDekArea).includes(toWhichDroppable)) {
-      const tmpDecks: Map<string, Card[]> = yield select(
-        (state: AppState) => state.tmpDecks,
+      const { payload } = action
+
+      console.log('dnd drop completeData', payload)
+      const toWhichDroppable = payload.to
+      const droppingDecks: Map<string, Card[]> = yield select(
+        (state: AppState) => state.droppingDecks,
       )
-      const tmpDeckCards = tmpDecks.get(toWhichDroppable)
-      if (tmpDeckCards.length === 0) {
-        const { fromDroppableId, dragItemIndex } = payload.from
-
-        const newDroppingDecks = _cloneDeep(droppingDecks)
-        const newTmpDecks = _cloneDeep(tmpDecks)
-        const moveToTmpCard = droppingDecks.get(fromDroppableId)[dragItemIndex]
-        newTmpDecks.get(toWhichDroppable).push(moveToTmpCard)
-        newDroppingDecks.get(fromDroppableId).splice(dragItemIndex, 1)
-
-        yield put(onDndDroppingDecksCardsDone(newDroppingDecks))
-        yield put(onCardCanBeMovedToTmpArea(newTmpDecks))
-
-      }else{
-         yield put(onCardCanNotBeMoveToTmpArea())
+      if (Object.values(BelowCardDroppableArea).includes(toWhichDroppable)) {
+        const newDroppingAreaCards = dndDoneOnDroppingDeckArea(
+          droppingDecks,
+          payload,
+        )
+        yield put(onDndDroppingDecksCardsDone(newDroppingAreaCards))
       }
-      
-    }
 
-    if (Object.values(TopRightFinishDeckDeck).includes(toWhichDroppable)) {
-      const finishDecks: Map<string, Card[]> = yield select(
-        (state: AppState) => state.finishDecks,
-      )
-      const finishingDeckCards = finishDecks.get(toWhichDroppable)
-      const { fromDroppableId, dragItemIndex, dragItemId } = payload.from
-      if (isCanPutToThisFinishDeck(parseInt(dragItemId, 10), toWhichDroppable, finishingDeckCards)) {
-        
-        const newDroppingDecks = _cloneDeep(droppingDecks)
-        const newFinishingDecks = _cloneDeep(finishDecks)
-        const moveToFinishingCard = droppingDecks.get(fromDroppableId)[dragItemIndex]
-        newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
-        newDroppingDecks.get(fromDroppableId).splice(dragItemIndex, 1)
+      if (Object.values(TopLeftTempDekArea).includes(toWhichDroppable)) {
+        const tmpDecks: Map<string, Card[]> = yield select(
+          (state: AppState) => state.tmpDecks,
+        )
+        const tmpDeckCards = tmpDecks.get(toWhichDroppable)
+        if (tmpDeckCards.length === 0) {
+          const { fromDroppableId, dragItemIndex } = payload.from
 
-        yield put(onDndDroppingDecksCardsDone(newDroppingDecks))
-        yield put(onCardCanBeMovedToFinishedArea(newFinishingDecks))
+          const newDroppingDecks = _cloneDeep(droppingDecks)
+          const newTmpDecks = _cloneDeep(tmpDecks)
+          const moveToTmpCard = droppingDecks.get(fromDroppableId)[
+            dragItemIndex
+          ]
+          newTmpDecks.get(toWhichDroppable).push(moveToTmpCard)
+          newDroppingDecks.get(fromDroppableId).splice(dragItemIndex, 1)
+
+          yield put(onDndDroppingDecksCardsDone(newDroppingDecks))
+          yield put(onCardCanBeMovedToTmpArea(newTmpDecks))
+        } else {
+          yield put(onCardCanNotBeMoveToTmpArea())
+        }
+      }
+
+      if (Object.values(TopRightFinishDeckDeck).includes(toWhichDroppable)) {
+        const finishDecks: Map<string, Card[]> = yield select(
+          (state: AppState) => state.finishDecks,
+        )
+        const finishingDeckCards = finishDecks.get(toWhichDroppable)
+        const { fromDroppableId, dragItemIndex, dragItemId } = payload.from
+        if (
+          isCanPutToThisFinishDeck(
+            parseInt(dragItemId, 10),
+            toWhichDroppable,
+            finishingDeckCards,
+          )
+        ) {
+          const newFinishingDecks = _cloneDeep(finishDecks)
+         
+
+          if (Object.values(BelowCardDroppableArea).includes(fromDroppableId)) {
+            const newDroppingDecks = _cloneDeep(droppingDecks)
+            newDroppingDecks.get(fromDroppableId).splice(dragItemIndex, 1)
+
+             const moveToFinishingCard = droppingDecks.get(fromDroppableId)[
+            dragItemIndex
+          ]
+          newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
+
+            yield put(onDndDroppingDecksCardsDone(newDroppingDecks))
+          } else if (
+            Object.values(TopLeftTempDekArea).includes(fromDroppableId)
+          ) {
+            const tmpDecks: Map<string, Card[]> = yield select(
+              (state: AppState) => state.tmpDecks,
+            )
+            const newTmpDecks = _cloneDeep(tmpDecks)
+            newTmpDecks.get(fromDroppableId).splice(dragItemIndex, 1)
+
+             const moveToFinishingCard = tmpDecks.get(fromDroppableId)[
+            dragItemIndex
+          ]
+          newFinishingDecks.get(toWhichDroppable).push(moveToFinishingCard)
+
+
+           yield put(onCardCanBeMovedFromTmpDeckToFinishedArea(newTmpDecks))
+          }
+
+          yield put(onCardCanBeMovedToFinishedArea(newFinishingDecks))
+        }
 
       }
-      
-      // else{
-      //    yield put(onCardCanNotBeMoveToTmpArea())
-      // }
-      
+    } catch (err) {
+      console.log(err)
+
+      swal.fire({
+        title: '發生錯誤',
+        text: err,
+        type: 'error',
+      })
     }
   }
 }
