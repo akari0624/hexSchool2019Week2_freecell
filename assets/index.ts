@@ -119,3 +119,9 @@ export const CardPic = {
 
 
 }
+
+import bg_normal from './bg-all.png'
+
+export const env_asset = {
+  bg_normal: bg_normal,
+}

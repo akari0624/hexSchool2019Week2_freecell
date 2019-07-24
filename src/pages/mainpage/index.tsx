@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DragAndDropContext, Droppable, Draggable } from '../../utils/DnDModule'
 import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
-import { CardDeckArea, PorkerCard, DecksWrapper, UpperDecksWrapper, TmpAndFinishDecksAreaWrapper } from './Styled'
+import { CardDeckArea, PorkerCard, DecksWrapper, UpperDecksWrapper, TmpAndFinishDecksAreaWrapper, MainTable } from './Styled'
 import { getAllCards } from '../../game_logic'
 import PorkerCardOnTmpDeck from '../../components/tmpDeck'
 import PorkerCardOnFinishDeck from '../../components/finishDeck'
@@ -110,13 +110,13 @@ export default function IndexPage() {
   return (
     <DragAndDropContext onDropDone={onDropDone}>
       {dndCtxProp => (
-        <>
+        <MainTable>
         <TmpAndFinishDecksAreaWrapper>
           <UpperDecksWrapper>{renderTmpDecks(tmpDecks, dndCtxProp)}</UpperDecksWrapper>
           <UpperDecksWrapper>{renderFinishDecks(finishDecks, dndCtxProp)}</UpperDecksWrapper>
         </TmpAndFinishDecksAreaWrapper>  
           <DecksWrapper>{renderDecks(droppingDecks, dndCtxProp)}</DecksWrapper>
-        </>
+        </MainTable>
       )}
     </DragAndDropContext>
   )

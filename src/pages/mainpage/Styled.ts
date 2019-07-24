@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { env_asset } from '../../../assets'
 
 export const CardDeckArea = styled.div`
   width: 150px;
@@ -28,4 +29,13 @@ export const DecksWrapper = styled.div`
   width: 100%;
   height: 50%;
   display: flex;
+`
+
+export const MainTable = styled.main`
+  width: 100vw;
+  height: 100vh;
+  background-image: url(${env_asset.bg_normal});
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  overflow: hidden;
 `
