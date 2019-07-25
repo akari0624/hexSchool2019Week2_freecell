@@ -1,2 +1,5 @@
 -  ~~能把牌 從 tmp區  移回 下方dropping區~~
 -  ~~下方dropping區 , 牌已經0張時，可以重新放上牌~~
+- 右上finish區 牌 改成完全堆疊
+- time travel功能
+- useInterval hook, 顯示經過時間
