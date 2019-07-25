@@ -10,7 +10,8 @@
 
 ## 會用什麼第三方library
 - 拖拉  
-  [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
+  ~~[react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)~~
+  因為`react-beautiful-dnd`有它自己太獨特的物理現象模擬，改使用自己包裝出來的[HTML-dragAndDrop module](./src/utils/DnDModule)
 - 狀態管理  
   redux
-    - middleware(如果有用的話): redux-saga
+    - middleware: redux-saga
