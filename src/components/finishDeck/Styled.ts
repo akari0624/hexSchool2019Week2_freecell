@@ -7,16 +7,17 @@ type CardDeckAreaProps = {
 }
 
 export const CardDeckArea = styled.div<CardDeckAreaProps>`
-  width: 150px;
-  height: 300px;
-  border: 1px solid #000000;
+  width: 110px;
+  height: 145px;
+  border: 2px solid #EDEDED;
+  border-radius: 10px;
   background-image: url(${props => finishDeck[props.kind]});
   background-repeat: no-repeat;
   background-size: 50% 30%;
   background-position: center center;
 `
 export const PorkerCardOnFinishDeck = styled.div`
-  width: 100px;
-  height: 90px;
+  width: 110px;
+  height: 145px;
   text-align: center;
 `

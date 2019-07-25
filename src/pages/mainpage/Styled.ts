@@ -1,34 +1,70 @@
 import styled from 'styled-components'
 import { env_asset } from '../../../assets'
 
+const cardOffsetTopToCollapse = 100
+
 export const CardDeckArea = styled.div`
-  width: 150px;
+  width: 110px;
   height: 300px;
-  border: 1px solid #000000;
 `
 
 export const PorkerCard = styled.div`
-  width: 100px;
-  height: 90px;
+  width: 110px;
+  height: 145px;
   text-align: center;
-  margin-left: 10px;
-  margin-top: -50px;
+  margin-top: -${cardOffsetTopToCollapse}px;
+
+  & > img {
+    width: 110px;
+    height: 145px;
+  }
 `
 
 export const TmpAndFinishDecksAreaWrapper = styled.div`
   display: flex;
+  width: 100%;
+  height: 145px;
+   & > div {
+    margin-right: 24px;
+  }
+
+  & > div:first-child {
+    margin-left: 85px;
+  }
+   & > div:nth-child(4) {
+    margin-right: 85px;
+  }
 `
 
 export const UpperDecksWrapper = styled.div`
   width: 50%;
   height: 50%;
   display: flex;
+
+  & > div {
+    margin-right: 24px;
+  }
+
+  & > div:last-child {
+    margin-right: 0px;
+  }
 `
 
-export const DecksWrapper = styled.div`
+export const DownSideDroppingDecksWrapper = styled.div`
   width: 100%;
   height: 50%;
   display: flex;
+  margin-top: ${cardOffsetTopToCollapse + 19}px;
+  & > div {
+    margin-right: 24px;
+  }
+
+  & > div:first-child {
+    margin-left: 85px;
+  }
+   & > div:nth-child(4) {
+    margin-right: 105px;
+  }
 `
 
 export const MainTable = styled.main`

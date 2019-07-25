@@ -6,7 +6,7 @@ import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
 import {
   CardDeckArea,
   PorkerCard,
-  DecksWrapper,
+  DownSideDroppingDecksWrapper,
   UpperDecksWrapper,
   TmpAndFinishDecksAreaWrapper,
   MainTable,
@@ -146,7 +146,7 @@ export default function IndexPage() {
               {renderFinishDecks(finishDecks, dndCtxProp)}
             </UpperDecksWrapper>
           </TmpAndFinishDecksAreaWrapper>
-          <DecksWrapper>{renderDecks(droppingDecks, dndCtxProp)}</DecksWrapper>
+          <DownSideDroppingDecksWrapper>{renderDecks(droppingDecks, dndCtxProp)}</DownSideDroppingDecksWrapper>
         </MainTable>
       )}
     </DragAndDropContext>
