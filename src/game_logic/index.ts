@@ -51,8 +51,10 @@ export const isCanPut_BelowDecks = (from: number, to: number) => {
   if (difference === 12) {
     return true
   }
-  const count = Math.floor((difference - 12) / 13)
-  const result = count === 2 ? true : false
+  const offsetSubstracted = difference - 12
+  const count = Math.floor(offsetSubstracted / 13)
+  const reminds = offsetSubstracted % 13
+  const result = (count === 2 && reminds === 0) ? true : false
   return result
 }
 

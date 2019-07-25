@@ -29,10 +29,22 @@ const onCardCanBeMovedToFinishedArea = createAction(
   (payload: Map<string, Card[]>) => payload,
 )
 
+const onCardCanBeMovedFromTmpDeckToFinishedArea = createAction(
+  DroppingDeckActionType.DND_DRAG_FROM_TMP_DECKS_TO_FINISHED_DECK_IT_CAN_PUT,
+  (payload: Map<string, Card[]>) => payload,
+)
+
+const onTmpDecksNeedToUpdate = createAction(
+  DroppingDeckActionType.TMP_DECKS_UPDATE,
+  (payload: Map<string, Card[]>) => payload,
+)
+
 export {
   initSwappedDroppingDecks,
   onDndDroppingDecksCardsDone,
   onCardCanBeMovedToTmpArea,
   onCardCanNotBeMoveToTmpArea,
   onCardCanBeMovedToFinishedArea,
+  onCardCanBeMovedFromTmpDeckToFinishedArea,
+  onTmpDecksNeedToUpdate,
 }

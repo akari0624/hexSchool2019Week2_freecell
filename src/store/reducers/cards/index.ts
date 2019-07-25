@@ -27,6 +27,8 @@ const tmpDecksReducer = (
 ) => {
   switch(action.type){
     case DroppingDeckActionType.DND_TMP_DECK_CARD:
+    case DroppingDeckActionType.DND_DRAG_FROM_TMP_DECKS_TO_FINISHED_DECK_IT_CAN_PUT:
+    case DroppingDeckActionType.TMP_DECKS_UPDATE:
       return action.payload
     case DroppingDeckActionType.DND_TMP_DECK_CARD_CAN_NOT_PUT:
       return state
