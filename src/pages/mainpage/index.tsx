@@ -3,7 +3,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DragAndDropContext, Droppable, Draggable } from '../../utils/DnDModule'
 import { DnDTransData } from '../../utils/DnDModule/models'
 import { DNDCtxProps } from '../../utils/DnDModule/DropAndDragContext'
-import { CardDeckArea, PorkerCard, DecksWrapper, UpperDecksWrapper, TmpAndFinishDecksAreaWrapper, MainTable } from './Styled'
+import {
+  CardDeckArea,
+  PorkerCard,
+  DecksWrapper,
+  UpperDecksWrapper,
+  TmpAndFinishDecksAreaWrapper,
+  MainTable,
+} from './Styled'
 import { getAllCards } from '../../game_logic'
 import PorkerCardOnTmpDeck from '../../components/tmpDeck'
 import PorkerCardOnFinishDeck from '../../components/finishDeck'
@@ -12,10 +19,29 @@ import {
   initSwappedDroppingDecks,
   handleDnd,
 } from '../../store/actionCreators/sagas'
+import { TopRightFinishDeckDeck } from './constants'
+import { PorkerKind } from '../../constant'
+
+const deckNameAndCardKindMapper = (finishDeckEnumName: string) => {
+  if (finishDeckEnumName === TopRightFinishDeckDeck.FINISH_CLUB) {
+  }
+  switch (finishDeckEnumName) {
+    case TopRightFinishDeckDeck.FINISH_CLUB:
+      return PorkerKind.club
+    case TopRightFinishDeckDeck.FINISH_DIAMOND:
+      return PorkerKind.diamond
+    case TopRightFinishDeckDeck.FINISH_HEART:
+      return PorkerKind.heart
+    case TopRightFinishDeckDeck.FINISH_SQUADE:
+      return PorkerKind.squade
+    default:
+      throw new Error('there must be some config file errro !!!')  
+  }
+}
 
 const renderTmpDecks = (
   tmpDeckCardData: Map<string, Card[]>,
-  dndCtxProp: DNDCtxProps
+  dndCtxProp: DNDCtxProps,
 ): ReactNode[] => {
   let elementsArr: ReactNode[] = []
   for (let [deckKey, cards] of tmpDeckCardData.entries()) {
@@ -24,7 +50,7 @@ const renderTmpDecks = (
         dndCtxProp={dndCtxProp}
         deckKey={deckKey}
         holdCards={cards}
-      />
+      />,
     )
   }
 
@@ -33,7 +59,7 @@ const renderTmpDecks = (
 
 const renderFinishDecks = (
   finishDeckCardData: Map<string, Card[]>,
-  dndCtxProp: DNDCtxProps
+  dndCtxProp: DNDCtxProps,
 ): ReactNode[] => {
   let elementsArr: ReactNode[] = []
   for (let [deckKey, cards] of finishDeckCardData.entries()) {
@@ -42,7 +68,8 @@ const renderFinishDecks = (
         dndCtxProp={dndCtxProp}
         deckKey={deckKey}
         holdCards={cards}
-      />
+        kind={deckNameAndCardKindMapper(deckKey)}
+      />,
     )
   }
 
@@ -51,7 +78,7 @@ const renderFinishDecks = (
 
 const renderDecks = (
   cardDecks: Map<string, Card[]>,
-  dndCtxProp: DNDCtxProps
+  dndCtxProp: DNDCtxProps,
 ): ReactNode[] => {
   let elementsArr: ReactNode[] = []
   for (let [deckKey, cards] of cardDecks.entries()) {
@@ -77,7 +104,7 @@ const renderDecks = (
             ))}
           </CardDeckArea>
         )}
-      </Droppable>
+      </Droppable>,
     )
   }
   return elementsArr
@@ -90,7 +117,7 @@ export default function IndexPage() {
   const tmpDecks = useSelector<AppState, Map<string, Card[]>>(
     appState => appState.tmpDecks,
   )
-    const finishDecks = useSelector<AppState, Map<string, Card[]>>(
+  const finishDecks = useSelector<AppState, Map<string, Card[]>>(
     appState => appState.finishDecks,
   )
   const dispatch = useDispatch()
@@ -104,17 +131,21 @@ export default function IndexPage() {
     (data: DnDTransData) => {
       dispatch(handleDnd(data))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return (
     <DragAndDropContext onDropDone={onDropDone}>
       {dndCtxProp => (
         <MainTable>
-        <TmpAndFinishDecksAreaWrapper>
-          <UpperDecksWrapper>{renderTmpDecks(tmpDecks, dndCtxProp)}</UpperDecksWrapper>
-          <UpperDecksWrapper>{renderFinishDecks(finishDecks, dndCtxProp)}</UpperDecksWrapper>
-        </TmpAndFinishDecksAreaWrapper>  
+          <TmpAndFinishDecksAreaWrapper>
+            <UpperDecksWrapper>
+              {renderTmpDecks(tmpDecks, dndCtxProp)}
+            </UpperDecksWrapper>
+            <UpperDecksWrapper>
+              {renderFinishDecks(finishDecks, dndCtxProp)}
+            </UpperDecksWrapper>
+          </TmpAndFinishDecksAreaWrapper>
           <DecksWrapper>{renderDecks(droppingDecks, dndCtxProp)}</DecksWrapper>
         </MainTable>
       )}

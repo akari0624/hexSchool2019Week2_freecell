@@ -125,3 +125,15 @@ import bg_normal from './bg-all.png'
 export const env_asset = {
   bg_normal: bg_normal,
 }
+
+import club_finishDeck from './finish_deck/club-white-finishDeck.png'
+import diamond_finishDeck from './finish_deck/diamond-white-finishDeck.png'
+import heart_finishDeck from './finish_deck/heart-white-finishDeck.png'
+import squade_finishDeck from './finish_deck/squade-white-finishDeck.png'
+
+export const finishDeck = {
+  club: club_finishDeck,
+  diamond: diamond_finishDeck,
+  heart: heart_finishDeck,
+  squade: squade_finishDeck,
+}
