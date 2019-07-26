@@ -4,6 +4,8 @@ import {
   BelowCardDroppableArea,
 } from '../../pages/mainpage/constants'
 
+import { HoldingState } from '../reducers/enhancers/undoable'
+
 export type Card = {
   value: number
   dragId: string
@@ -11,7 +13,7 @@ export type Card = {
 }
 
 export interface AppState {
-  droppingDecks: Map<string, Card[]>
-  tmpDecks: Map<string, Card[]>
-  finishDecks: Map<string, Card[]>
+  droppingDecks: HoldingState<Map<BelowCardDroppableArea, Card[]>>
+  tmpDecks: HoldingState<Map<TopLeftTempDekArea, Card[]>>
+  finishDecks: HoldingState<Map<TopRightFinishDeckDeck, Card[]>>
 }

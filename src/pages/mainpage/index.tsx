@@ -112,16 +112,17 @@ const renderDecks = (
 
 export default function IndexPage() {
   const droppingDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.droppingDecks,
+    appState => appState.droppingDecks.present,
   )
   const tmpDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.tmpDecks,
+    appState => appState.tmpDecks.present,
   )
   const finishDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.finishDecks,
+    appState => appState.finishDecks.present,
   )
   const dispatch = useDispatch()
 
+console.log('tmpDecks', tmpDecks)
   useEffect(() => {
     const cardsArr = getAllCards(30)
     dispatch(initSwappedDroppingDecks(cardsArr))
@@ -134,7 +135,16 @@ export default function IndexPage() {
     [dispatch],
   )
 
+   const onUndoClick = useCallback(
+    (evt: React.MouseEvent<HTMLButtonElement>) => {
+      dispatch({type: 'UNDO'})
+    },
+    [dispatch],
+  )
+
   return (
+    <>
+    <button type="button" onClick={onUndoClick}>undo</button>
     <DragAndDropContext onDropDone={onDropDone}>
       {dndCtxProp => (
         <MainTable>
@@ -150,5 +160,6 @@ export default function IndexPage() {
         </MainTable>
       )}
     </DragAndDropContext>
+    </>
   )
 }

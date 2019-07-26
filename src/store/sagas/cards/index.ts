@@ -164,7 +164,7 @@ function* onDropCompleteHandleDndFlow() {
       console.log('dnd drop completeData', payload)
       const toWhichDroppable = payload.to
       const droppingDecks: Map<string, Card[]> = yield select(
-        (state: AppState) => state.droppingDecks,
+        (state: AppState) => state.droppingDecks.present,
       )
       // 從下牌區 拖放 到 下牌區
       if (
@@ -189,7 +189,7 @@ function* onDropCompleteHandleDndFlow() {
         Object.values(BelowCardDroppableArea).includes(toWhichDroppable)
       ) {
         const tmpDecks: Map<string, Card[]> = yield select(
-          (state: AppState) => state.tmpDecks,
+          (state: AppState) => state.tmpDecks.present,
         )
 
         const newDroppingAreaCards = dndDoneOnDroppingDeckArea(
@@ -208,7 +208,7 @@ function* onDropCompleteHandleDndFlow() {
 
       if (Object.values(TopLeftTempDekArea).includes(toWhichDroppable)) {
         const tmpDecks: Map<string, Card[]> = yield select(
-          (state: AppState) => state.tmpDecks,
+          (state: AppState) => state.tmpDecks.present,
         )
         const tmpDeckCards = tmpDecks.get(toWhichDroppable)
         if (tmpDeckCards.length === 0) {
@@ -231,7 +231,7 @@ function* onDropCompleteHandleDndFlow() {
 
       if (Object.values(TopRightFinishDeckDeck).includes(toWhichDroppable)) {
         const finishDecks: Map<string, Card[]> = yield select(
-          (state: AppState) => state.finishDecks,
+          (state: AppState) => state.finishDecks.present,
         )
         const finishingDeckCards = finishDecks.get(toWhichDroppable)
         const { fromDroppableId, dragItemIndex, dragItemId } = payload.from
@@ -258,7 +258,7 @@ function* onDropCompleteHandleDndFlow() {
             Object.values(TopLeftTempDekArea).includes(fromDroppableId)
           ) {
             const tmpDecks: Map<string, Card[]> = yield select(
-              (state: AppState) => state.tmpDecks,
+              (state: AppState) => state.tmpDecks.present,
             )
             const newTmpDecks = _cloneDeep(tmpDecks)
             newTmpDecks.get(fromDroppableId).splice(dragItemIndex, 1)
