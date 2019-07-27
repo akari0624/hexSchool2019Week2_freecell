@@ -27,6 +27,7 @@ import { CardPic } from '../../../../assets'
 import { DnDTransData, DragSource } from '../../../utils/DnDModule/models'
 import { Card, AppState } from '../../types'
 import _isEqual from 'lodash.isequal'
+import { HoldingState } from '../../reducers/enhancers/undoable'
 
 const setUpInitDroppingDecksCards = (cardsNumberArr: number[]) => {
   const cardData = getDefaultDroppingDecksState()
@@ -164,7 +165,7 @@ function* onDropCompleteHandleDndFlow() {
       console.log('dnd drop completeData', payload)
       const toWhichDroppable = payload.to
       const droppingDecks: Map<string, Card[]> = yield select(
-        (state: AppState) => state.droppingDecks.present,
+        (state: HoldingState<AppState>) => state.present.droppingDecks,
       )
       // 從下牌區 拖放 到 下牌區
       if (
@@ -189,7 +190,7 @@ function* onDropCompleteHandleDndFlow() {
         Object.values(BelowCardDroppableArea).includes(toWhichDroppable)
       ) {
         const tmpDecks: Map<string, Card[]> = yield select(
-          (state: AppState) => state.tmpDecks.present,
+          (state: HoldingState<AppState>) => state.present.tmpDecks,
         )
 
         const newDroppingAreaCards = dndDoneOnDroppingDeckArea(
@@ -208,7 +209,7 @@ function* onDropCompleteHandleDndFlow() {
 
       if (Object.values(TopLeftTempDekArea).includes(toWhichDroppable)) {
         const tmpDecks: Map<string, Card[]> = yield select(
-          (state: AppState) => state.tmpDecks.present,
+          (state: HoldingState<AppState>) => state.present.tmpDecks,
         )
         const tmpDeckCards = tmpDecks.get(toWhichDroppable)
         if (tmpDeckCards.length === 0) {
@@ -231,7 +232,7 @@ function* onDropCompleteHandleDndFlow() {
 
       if (Object.values(TopRightFinishDeckDeck).includes(toWhichDroppable)) {
         const finishDecks: Map<string, Card[]> = yield select(
-          (state: AppState) => state.finishDecks.present,
+          (state: HoldingState<AppState>) => state.present.finishDecks,
         )
         const finishingDeckCards = finishDecks.get(toWhichDroppable)
         const { fromDroppableId, dragItemIndex, dragItemId } = payload.from
@@ -258,7 +259,7 @@ function* onDropCompleteHandleDndFlow() {
             Object.values(TopLeftTempDekArea).includes(fromDroppableId)
           ) {
             const tmpDecks: Map<string, Card[]> = yield select(
-              (state: AppState) => state.tmpDecks.present,
+              (state: HoldingState<AppState>) => state.present.tmpDecks,
             )
             const newTmpDecks = _cloneDeep(tmpDecks)
             newTmpDecks.get(fromDroppableId).splice(dragItemIndex, 1)

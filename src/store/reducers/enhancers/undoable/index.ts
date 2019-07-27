@@ -41,10 +41,10 @@ console.log('present', present)
       default:
         // Delegate handling the action to the passed reducer
         const newPresent = reducer(present, action)
-        // if (present === newPresent) {
-        //   console.log('1111111111')
-        //   return state
-        // }
+        if (present === newPresent) {
+         
+          return state
+        }
         const newNoChangePast = _cloneDeep(past)
         newNoChangePast.push(present)
         return {

@@ -99,8 +99,8 @@ const droppingDecksReducer = (
   return state
 }
 
-const undoable_droppingDecksReducer = undoableReducerEnhancer(droppingDecksReducer)
-const undoable_tmpDecksReducer = undoableReducerEnhancer(tmpDecksReducer)
-const undoable_finishDecksReducer = undoableReducerEnhancer(finishDecksReducer)
-
-export { undoable_droppingDecksReducer, undoable_tmpDecksReducer, undoable_finishDecksReducer, }
+export {
+  droppingDecksReducer,
+  tmpDecksReducer,
+  finishDecksReducer,
+}
