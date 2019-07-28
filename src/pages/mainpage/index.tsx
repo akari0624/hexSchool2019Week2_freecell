@@ -21,6 +21,8 @@ import {
 } from '../../store/actionCreators/sagas'
 import { TopRightFinishDeckDeck } from './constants'
 import { PorkerKind } from '../../constant'
+import { HoldingState } from '../../store/reducers/enhancers/undoable'
+import { usePassedTimeTimer } from '../../customHook/passedTimeTmer'
 
 const deckNameAndCardKindMapper = (finishDeckEnumName: string) => {
   if (finishDeckEnumName === TopRightFinishDeckDeck.FINISH_CLUB) {
@@ -35,7 +37,7 @@ const deckNameAndCardKindMapper = (finishDeckEnumName: string) => {
     case TopRightFinishDeckDeck.FINISH_SQUADE:
       return PorkerKind.squade
     default:
-      throw new Error('there must be some config file errro !!!')  
+      throw new Error('there must be some config file errro !!!')
   }
 }
 
@@ -111,14 +113,15 @@ const renderDecks = (
 }
 
 export default function IndexPage() {
-  const droppingDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.droppingDecks,
+  const droppingDecks = useSelector<
+    HoldingState<AppState>,
+    Map<string, Card[]>
+  >(appState => appState.present.droppingDecks)
+  const tmpDecks = useSelector<HoldingState<AppState>, Map<string, Card[]>>(
+    appState => appState.present.tmpDecks,
   )
-  const tmpDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.tmpDecks,
-  )
-  const finishDecks = useSelector<AppState, Map<string, Card[]>>(
-    appState => appState.finishDecks,
+  const finishDecks = useSelector<HoldingState<AppState>, Map<string, Card[]>>(
+    appState => appState.present.finishDecks,
   )
   const dispatch = useDispatch()
 
@@ -134,21 +137,36 @@ export default function IndexPage() {
     [dispatch],
   )
 
+  const onUndoClick = useCallback(
+    (evt: React.MouseEvent<HTMLButtonElement>) => {
+      dispatch({ type: 'UNDO' })
+    },
+    [dispatch],
+  )
+
   return (
-    <DragAndDropContext onDropDone={onDropDone}>
-      {dndCtxProp => (
-        <MainTable>
-          <TmpAndFinishDecksAreaWrapper>
-            <UpperDecksWrapper>
-              {renderTmpDecks(tmpDecks, dndCtxProp)}
-            </UpperDecksWrapper>
-            <UpperDecksWrapper>
-              {renderFinishDecks(finishDecks, dndCtxProp)}
-            </UpperDecksWrapper>
-          </TmpAndFinishDecksAreaWrapper>
-          <DownSideDroppingDecksWrapper>{renderDecks(droppingDecks, dndCtxProp)}</DownSideDroppingDecksWrapper>
-        </MainTable>
-      )}
-    </DragAndDropContext>
+    <>
+      <button type="button" onClick={onUndoClick}>
+        undo
+      </button>
+      <span> {usePassedTimeTimer()}</span>
+      <DragAndDropContext onDropDone={onDropDone}>
+        {dndCtxProp => (
+          <MainTable>
+            <TmpAndFinishDecksAreaWrapper>
+              <UpperDecksWrapper>
+                {renderTmpDecks(tmpDecks, dndCtxProp)}
+              </UpperDecksWrapper>
+              <UpperDecksWrapper>
+                {renderFinishDecks(finishDecks, dndCtxProp)}
+              </UpperDecksWrapper>
+            </TmpAndFinishDecksAreaWrapper>
+            <DownSideDroppingDecksWrapper>
+              {renderDecks(droppingDecks, dndCtxProp)}
+            </DownSideDroppingDecksWrapper>
+          </MainTable>
+        )}
+      </DragAndDropContext>
+    </>
   )
 }

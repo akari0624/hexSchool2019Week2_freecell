@@ -5,6 +5,7 @@ import {
   finishDecksReducer,
 } from './cards'
 import { AppState } from '../types'
+import { undoableReducerEnhancer }  from '../reducers/enhancers/undoable'
 
 const rootReducer = combineReducers<AppState>({
   droppingDecks: droppingDecksReducer,
@@ -12,4 +13,4 @@ const rootReducer = combineReducers<AppState>({
   finishDecks: finishDecksReducer,
 })
 
-export default rootReducer
+export default undoableReducerEnhancer(rootReducer)

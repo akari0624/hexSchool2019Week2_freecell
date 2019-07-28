@@ -13,8 +13,8 @@
     "distWithBabel": "NODE_ENV=withBabel npm run clean && webpack --config ./webpack_config/webpack.config.prod.js --progress --bail --env dist -p",
     "deploy": "npm run dist && npm run cp_favi && gh-pages -d dist",
     "deployWithBabel": "npm run distWithBabel && gh-pages -d dist",
-    "test": "jest --verbose",
-    "test:watch": "jest --watch --verbose",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "cp_favi": "cp ./favicon.ico ./dist",
     "clean": "rimraf dist/*"
   },
@@ -116,6 +116,7 @@
     "sweetalert2": "^8.14.0"
   },
   "jest": {
+    "verbose": true,
     "rootDir": "src",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"

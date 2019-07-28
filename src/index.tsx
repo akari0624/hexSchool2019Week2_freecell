@@ -9,7 +9,6 @@ import { StyledComponentGlobalStyle } from './themes/globalStyle'
 import indexRouter from './pages/mainpage'
 import logicRootSagaArray from './store/sagas'
 
-
 const sagaMiddleware = createSagaMiddleware()
 
 const createStoreWithMiddleware = applyMiddleware(sagaMiddleware)(createStore)
@@ -23,12 +22,14 @@ if (process.env.NODE_ENV === 'production') {
     reducers,
     /**  force cast~  https://github.com/zalmoxisus/redux-devtools-extension/issues/134#issuecomment-379861240 */
     (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
-      (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+      (window as any).__REDUX_DEVTOOLS_EXTENSION__({
+        serialize: { options: { map: true } },
+      }),
   )
 }
 
 logicRootSagaArray.forEach(kindOfSomeFlowSaga =>
-  sagaMiddleware.run(kindOfSomeFlowSaga)
+  sagaMiddleware.run(kindOfSomeFlowSaga),
 )
 
 ReactDOM.render(
@@ -44,5 +45,5 @@ ReactDOM.render(
       </BrowserRouter>
     </Provider>
   </>,
-  document.querySelector('.container')
+  document.querySelector('.container'),
 )

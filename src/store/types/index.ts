@@ -4,6 +4,7 @@ import {
   BelowCardDroppableArea,
 } from '../../pages/mainpage/constants'
 
+
 export type Card = {
   value: number
   dragId: string
@@ -11,7 +12,7 @@ export type Card = {
 }
 
 export interface AppState {
-  droppingDecks: Map<string, Card[]>
-  tmpDecks: Map<string, Card[]>
-  finishDecks: Map<string, Card[]>
+  droppingDecks: Map<BelowCardDroppableArea, Card[]>
+  tmpDecks: Map<TopLeftTempDekArea, Card[]>
+  finishDecks: Map<TopRightFinishDeckDeck, Card[]>
 }

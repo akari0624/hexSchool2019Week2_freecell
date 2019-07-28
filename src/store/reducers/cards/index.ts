@@ -7,6 +7,7 @@ import { Card } from '../../types'
 import { Action } from 'redux-actions'
 import { DroppingDeckActionType } from '../../actionTypes/reducers'
 import { DnDTransData } from '../../../utils/DnDModule/models'
+import { undoableReducerEnhancer } from '../enhancers/undoable'
 
 const getDefaultTmpDecksState = () => {
   const tmpDeckCardData = new Map<TopLeftTempDekArea, Card[]>()
@@ -49,7 +50,7 @@ const getDefaultFinishDecksState = () => {
   return finishDeckCardData
 }
 
-const finishDecksReducer = (state = getDefaultFinishDecksState(), action) => {
+const finishDecksReducer = (state = getDefaultFinishDecksState(), action: Action<Map<TopRightFinishDeckDeck, Card[]>>) => {
 
 const { type: doWhat, payload } = action
 
@@ -98,4 +99,8 @@ const droppingDecksReducer = (
   return state
 }
 
-export { droppingDecksReducer, tmpDecksReducer, finishDecksReducer, }
+export {
+  droppingDecksReducer,
+  tmpDecksReducer,
+  finishDecksReducer,
+}
