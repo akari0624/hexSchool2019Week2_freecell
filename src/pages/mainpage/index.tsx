@@ -22,6 +22,7 @@ import {
 import { TopRightFinishDeckDeck } from './constants'
 import { PorkerKind } from '../../constant'
 import { HoldingState } from '../../store/reducers/enhancers/undoable'
+import { usePassedTimeTimer } from '../../customHook/passedTimeTmer'
 
 const deckNameAndCardKindMapper = (finishDeckEnumName: string) => {
   if (finishDeckEnumName === TopRightFinishDeckDeck.FINISH_CLUB) {
@@ -124,7 +125,6 @@ export default function IndexPage() {
   )
   const dispatch = useDispatch()
 
-  console.log('tmpDecks', tmpDecks)
   useEffect(() => {
     const cardsArr = getAllCards(30)
     dispatch(initSwappedDroppingDecks(cardsArr))
@@ -149,6 +149,7 @@ export default function IndexPage() {
       <button type="button" onClick={onUndoClick}>
         undo
       </button>
+      <span> {usePassedTimeTimer()}</span>
       <DragAndDropContext onDropDone={onDropDone}>
         {dndCtxProp => (
           <MainTable>
