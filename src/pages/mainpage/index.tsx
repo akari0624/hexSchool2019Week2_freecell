@@ -10,6 +10,13 @@ import {
   UpperDecksWrapper,
   TmpAndFinishDecksAreaWrapper,
   MainTable,
+  UndoBtnAnchor,
+  GameLogoArea,
+  KingLogoPic,
+  LogoGameNameTextWrapper,
+  UppestFunctionalAreaWrapper,
+  Info_Time_UndoWrapper,
+  TimeTextWrapper,
 } from './Styled'
 import { getAllCards } from '../../game_logic'
 import PorkerCardOnTmpDeck from '../../components/tmpDeck'
@@ -138,21 +145,29 @@ export default function IndexPage() {
   )
 
   const onUndoClick = useCallback(
-    (evt: React.MouseEvent<HTMLButtonElement>) => {
+    (evt: React.MouseEvent<HTMLElement>) => {
       dispatch({ type: 'UNDO' })
     },
     [dispatch],
   )
 
   return (
-    <>
-      <button type="button" onClick={onUndoClick}>
-        undo
-      </button>
-      <span> {usePassedTimeTimer()}</span>
+    <MainTable>
+      <UppestFunctionalAreaWrapper>
+        <GameLogoArea>
+          <KingLogoPic />
+          <LogoGameNameTextWrapper>FREECELL</LogoGameNameTextWrapper>
+        </GameLogoArea>
+        <Info_Time_UndoWrapper>
+          <TimeTextWrapper>Time:{usePassedTimeTimer()}</TimeTextWrapper>
+          <UndoBtnAnchor onClick={onUndoClick} />
+        </Info_Time_UndoWrapper>
+      </UppestFunctionalAreaWrapper>
+      
+      <span> {}</span>
       <DragAndDropContext onDropDone={onDropDone}>
         {dndCtxProp => (
-          <MainTable>
+          <>
             <TmpAndFinishDecksAreaWrapper>
               <UpperDecksWrapper>
                 {renderTmpDecks(tmpDecks, dndCtxProp)}
@@ -164,9 +179,9 @@ export default function IndexPage() {
             <DownSideDroppingDecksWrapper>
               {renderDecks(droppingDecks, dndCtxProp)}
             </DownSideDroppingDecksWrapper>
-          </MainTable>
+          </>
         )}
       </DragAndDropContext>
-    </>
+    </MainTable>
   )
 }
