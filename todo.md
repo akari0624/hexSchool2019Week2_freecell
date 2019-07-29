@@ -13,7 +13,7 @@
 
 ## feature to implement: 
 - ~~time travel功能~~ 有不完美的地方，但已做出來
-- write a custom hook - useInterval hook, 顯示經過時間
+- ~~write a custom hook - useInterval hook, 顯示經過時間~~
 - 右上finish區 牌 改成完全堆疊
-- 根據tmp區剩n個空格，能夠拉動符合規則的n+1張牌
+- 根據tmp區剩n個空格，能夠拉動符合規則的n+1張牌  **難度高**
 
