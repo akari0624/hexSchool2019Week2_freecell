@@ -12,7 +12,12 @@
 ## 會用什麼第三方library
 - 拖拉  
   ~~[react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)~~  
-  因為`react-beautiful-dnd`有它自己太獨特的物理現象模擬，改使用自己包裝出來的[HTML-dragAndDrop module](./src/utils/DnDModule)
+  因為`react-beautiful-dnd`有它自己太獨特的物理現象模擬，改使用自己包裝[HTML5-dnd API](https://developer.mozilla.org/zh-TW/docs/Web/API/HTML_Drag_and_Drop_API)後做出來的[dragAndDrop module](./src/utils/DnDModule)
 - 狀態管理  
   redux
     - middleware: redux-saga
+
+
+## what I learn from this developing experience
+1. reducer的state如果是`ES6`的原生[Map](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Map), [Set](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Set)的話，[redux-devtools-extension]要做`強迫序列化`的設定，不然會看不到東西。 [@see](./todo.md) [@code](./src/index.tsx)
+2. 該如何為[customHook](https://reactjs.org/docs/hooks-custom.html)寫unitTest
