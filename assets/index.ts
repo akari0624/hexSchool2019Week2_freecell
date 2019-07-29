@@ -137,3 +137,13 @@ export const finishDeck = {
   heart: heart_finishDeck,
   squade: squade_finishDeck,
 }
+
+import btn_gameinfo from './meta/btn-more.png'
+import btn_undo from './meta/btn-return.png'
+import freeCell_KingLogo from './meta/king.png'
+
+export const meta = {
+  game_info: btn_gameinfo,
+  btn_undo: btn_undo,
+  kingLogo: freeCell_KingLogo,
+}
